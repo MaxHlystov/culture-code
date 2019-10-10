@@ -1,2 +1,2 @@
-# culture-code
+# Culture code
 Prototype of universal recomendation system
