@@ -1,6 +1,7 @@
 package ru.fmtk.khlystov.culture_code.model.music
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.format.annotation.DateTimeFormat
 import ru.fmtk.khlystov.culture_code.model.Country
@@ -15,11 +16,11 @@ data class MusicAlbum(@Id val id: String,
                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                       val released: LocalDateTime,
                       val RuntimeSeconds: Int,
-                      val genres: List<MusicGenre>,
-                      val labels: List<MusicLabel>,
-                      val artist: MusicArtist, // исполнитель
-                      val composer: Person, // композитор
-                      val country: List<Country>,
+                      @DBRef val genres: Set<MusicGenre> = HashSet(),
+                      @DBRef val labels: Set<MusicLabel> = HashSet(),
+                      @DBRef val artist: MusicArtist, // исполнитель
+                      @DBRef val composer: Person, // композитор
+                      @DBRef val country: Country,
                       val website: String,
                       val posterUrl: String,
                       val description: String)
