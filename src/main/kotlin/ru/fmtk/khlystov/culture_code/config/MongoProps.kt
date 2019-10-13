@@ -5,7 +5,9 @@ import org.springframework.stereotype.Component
 
 @Component
 @ConfigurationProperties("spring.data.mongodb")
-data class MongoProps(val port: Int,
-                      val host: String,
-                      val database: String,
-                      val uri: String)
+class MongoProps {
+    var port: Int = 27017
+    lateinit var host: String
+    lateinit var database: String
+    lateinit var uri: String
+}
