@@ -1,6 +1,6 @@
 package ru.fmtk.khlystov.culture_code.changelogs
 
-fun getListOfMusicGenres(): Sequence<String> = sequenceOf(
+fun getListOfMusicGenres(): Sequence<String> = setOf(
         "Adult contemporary",
         "Абстрактный хип-хоп",
         "Авангардная музыка",
@@ -379,7 +379,6 @@ fun getListOfMusicGenres(): Sequence<String> = sequenceOf(
         "Постхардкор",
         "Постшансон",
         "Поэма",
-        "Поэма",
         "Прикладная музыка",
         "Прогрессив-фолк",
         "Прогрессив-хаус",
@@ -658,4 +657,4 @@ fun getListOfMusicGenres(): Sequence<String> = sequenceOf(
         "Wonky",
         "Youth crew",
         "Zeuhl"
-)
+).asSequence()

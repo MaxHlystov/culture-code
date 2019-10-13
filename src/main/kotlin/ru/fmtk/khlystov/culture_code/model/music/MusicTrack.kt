@@ -8,8 +8,8 @@ import ru.fmtk.khlystov.culture_code.model.Person
 import java.time.LocalDate
 
 @Document(collection = "Music_Tracks")
-data class MusicTrack(@Id val id: String,
-                      val Title: String,
+data class MusicTrack(@Id val id: String?,
+                      val title: String,
                       val year: Short,
                       @DBRef val album: MusicAlbum?,
                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

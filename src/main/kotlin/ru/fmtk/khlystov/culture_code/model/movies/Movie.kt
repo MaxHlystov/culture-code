@@ -9,8 +9,8 @@ import ru.fmtk.khlystov.culture_code.model.Person
 import java.time.LocalDate
 
 @Document(collection = "Movies_Movies")
-data class Movie(@Id val id: String,
-                 val Title: String,
+data class Movie(@Id val id: String?,
+                 val title: String,
                  val type: MovieType,
                  val year: Short,
                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

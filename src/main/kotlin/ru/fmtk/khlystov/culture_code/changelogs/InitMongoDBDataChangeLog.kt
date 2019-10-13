@@ -2,29 +2,38 @@ package ru.fmtk.khlystov.culture_code.changelogs
 
 import com.github.cloudyrock.mongock.ChangeLog
 import com.github.cloudyrock.mongock.ChangeSet
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.data.mongodb.core.MongoTemplate
 import ru.fmtk.khlystov.culture_code.model.Country
 import ru.fmtk.khlystov.culture_code.model.Person
+import ru.fmtk.khlystov.culture_code.model.User
 import ru.fmtk.khlystov.culture_code.model.books.Book
 import ru.fmtk.khlystov.culture_code.model.books.BookGenre
+import ru.fmtk.khlystov.culture_code.model.movies.Movie
 import ru.fmtk.khlystov.culture_code.model.movies.MovieGenre
 import ru.fmtk.khlystov.culture_code.model.music.MusicGenre
+import java.util.UUID
+
+
 
 @ChangeLog(order = "001")
 class InitMongoDBDataChangeLog {
 
+    val log: Logger = LoggerFactory.getLogger(InitMongoDBDataChangeLog::class.java)
+
     @ChangeSet(order = "000", id = "initBookGenres", author = "khlystov", runAlways = false)
     fun initBookGenres(template: MongoTemplate) {
-        template.insertAllWithTransform(getListsOfBookGenres().asSequence()) { (group, sequence) ->
-            sequence.map { genre -> BookGenre(null, genre, group) }
-        }
+        val seqOfBooks = getListsOfBookGenres().asSequence()
+                .flatMap { (group, sequence) ->
+                    sequence.map { genre -> BookGenre(null, genre, group) }
+                }
+        template.insertAllWithTransform(seqOfBooks) { genre -> genre }
     }
 
     @ChangeSet(order = "001", id = "initCountries", author = "khlystov", runAlways = false)
     fun initCountries(template: MongoTemplate) {
-        template.insertAllWithTransform(getListOfCountries()) { (name, alpha3, iso) ->
-            Country(null, name, alpha3, iso.toShort())
-        }
+        template.insertAllWithTransform(getListOfCountries()) { country -> country }
     }
 
     @ChangeSet(order = "002", id = "initMovieGenres", author = "khlystov", runAlways = false)
@@ -37,7 +46,7 @@ class InitMongoDBDataChangeLog {
     @ChangeSet(order = "003", id = "initMusicGenres", author = "khlystov", runAlways = false)
     fun initMusicGenres(template: MongoTemplate) {
         template.insertAllWithTransform(getListOfMusicGenres()) { genre ->
-            template.save(MusicGenre(null, genre))
+            MusicGenre(null, genre)
         }
     }
 
@@ -50,11 +59,37 @@ class InitMongoDBDataChangeLog {
             book.copyWithSubstitute(genres, savedAuthors)
         }
     }
+
+    @ChangeSet(order = "005", id = "initMovies", author = "khlystov", runAlways = false)
+    fun initMovies(template: MongoTemplate) {
+        val genres = template.findAll(MovieGenre::class.java).groupBy(MovieGenre::name)
+        val countries = template.findAll(Country::class.java).groupBy(Country::alpha3)
+        val savedPersons = template.insertAllWithTransform(ListOfMovies.persons.asSequence()) { (_, person) -> person }
+                .groupBy(Person::fullName)
+        template.insertAllWithTransform(ListOfMovies.movies.asSequence()) { movie ->
+            movie.copyWithSubstitute(genres, countries, savedPersons)
+        }
+    }
+
+    /*@ChangeSet(order = "006", id = "initUsers", author = "khlystov", runAlways = false)
+    fun initUsers(template: MongoTemplate,
+                  passwordEncoder: PasswordEncoder) {
+        fun getRndUser(name: String, roles: Set<String> = setOf("User")): User {
+            val password = UUID.randomUUID().toString()
+            val user = User(null, name, password = passwordEncoder.encode(password), roles = roles)
+            log.info("Created admin user with name \"${user.name}\" and password $password")
+            return user
+        }
+        template.save(getRndUser("Admin", setOf("Admin", "User")))
+        template.save(getRndUser("User"))
+    }*/
 }
 
 private fun <T, R> MongoTemplate.insertAllWithTransform(sequence: Sequence<T>,
-                                                        transform: (value: T) -> R): Collection<R> =
-        this.insertAll(sequence.map(transform).toList())
+                                                        transform: (value: T) -> R): Collection<R> {
+    val l = sequence.map(transform).toList()
+    return this.insertAll<R>(l)
+}
 
 private fun Book.copyWithSubstitute(genres: Map<String, List<BookGenre>>,
                                     persons: Map<String, List<Person>>): Book {
@@ -68,10 +103,37 @@ private fun Book.copyWithSubstitute(genres: Map<String, List<BookGenre>>,
     )
 }
 
+private fun Movie.copyWithSubstitute(genres: Map<String, List<MovieGenre>>,
+                                     countries: Map<String, List<Country>>,
+                                     persons: Map<String, List<Person>>): Movie {
+    return Movie(this.id,
+            this.title,
+            this.type,
+            this.year,
+            this.released,
+            this.RuntimeSeconds,
+            this.genres.map { genre -> genres.getFirstOrDefault(genre.name, genre) }.toSet(),
+            persons.getFirstOrDefault(this.director.fullName, this.director),
+            this.actors.map { actor -> persons.getFirstOrDefault(actor.fullName, actor) }.toSet(),
+            countries.getFirstOrException(this.country.alpha3),
+            this.website,
+            this.posterUrl,
+            this.description)
+}
+
 private fun <ID, T> Map<ID, List<T>>.getFirstOrDefault(id: ID, default: T): T {
     val items: List<T>? = this[id]
-    if (items == null || items.size == 0) {
+    if (items == null || items.isEmpty()) {
         return default
     }
     return items[0]
 }
+
+private fun <ID, T> Map<ID, List<T>>.getFirstOrException(id: ID): T {
+    val items: List<T>? = this[id]
+    if (items == null || items.isEmpty()) {
+        throw IllegalArgumentException("Didn't find item with id $id in list of type ${this::class.simpleName}.")
+    }
+    return items[0]
+}
+
