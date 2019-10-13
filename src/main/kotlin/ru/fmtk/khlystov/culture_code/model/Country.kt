@@ -4,4 +4,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document(collection = "Main_Countries")
-data class Country(@Id val id: String?, val name: String)
+data class Country(@Id val id: String?,
+                   val name: String,
+                   val alpha3: String,
+                   val iso: Short)
