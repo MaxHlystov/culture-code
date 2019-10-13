@@ -6,15 +6,15 @@ import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.format.annotation.DateTimeFormat
 import ru.fmtk.khlystov.culture_code.model.Country
 import ru.fmtk.khlystov.culture_code.model.Person
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 @Document(collection = "Movies_Movies")
 data class Movie(@Id val id: String,
                  val Title: String,
                  val type: MovieType,
                  val year: Short,
-                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                 val released: LocalDateTime,
+                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                 val released: LocalDate,
                  val RuntimeSeconds: Int,
                  @DBRef val genres: Set<MovieGenre> = HashSet(),
                  @DBRef val director: Person,
