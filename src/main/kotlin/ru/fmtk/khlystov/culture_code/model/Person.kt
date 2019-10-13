@@ -11,4 +11,5 @@ data class Person(@Id val id: String?,
                   @Indexed val fullName: String,
                   val shortBio: String,
                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                  val birthday: LocalDate)
+                  val birthday: LocalDate,
+                  val photoUrl: String)
