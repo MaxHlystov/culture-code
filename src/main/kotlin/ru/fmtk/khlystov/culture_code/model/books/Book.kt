@@ -6,12 +6,11 @@ import org.springframework.data.mongodb.core.mapping.Document
 import ru.fmtk.khlystov.culture_code.model.Person
 
 @Document(collection = "Books_Books")
-data class Book(@Id val id: String,
+data class Book(@Id val id: String?,
                 val Title: String,
                 val year: Short,
                 @DBRef val bookGenres: Set<BookGenre> = HashSet(),
                 val writers: Set<Person> = HashSet(),
-                val originalBookId: String?,
                 @DBRef val isbnCodes: Set<String> = HashSet(),
                 val posterUrl: String,
                 val description: String)
