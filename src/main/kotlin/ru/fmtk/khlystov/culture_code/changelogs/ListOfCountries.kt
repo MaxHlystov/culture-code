@@ -1,7 +1,7 @@
 package ru.fmtk.khlystov.culture_code.changelogs
 
 fun getListOfCountries(): Sequence<Triple<String, String, String>> = sequenceOf(
-        (Triple("Австрийская Республика", "AUT", "040"),
+        Triple("Австрийская Республика", "AUT", "040"),
         Triple("Алжирская Народная Демократическая Республика", "DZA", "012"),
         Triple("Арабская Республика Египет", "EGY", "818"),
         Triple("Аргентинская Республика", "ARG", "032"),
