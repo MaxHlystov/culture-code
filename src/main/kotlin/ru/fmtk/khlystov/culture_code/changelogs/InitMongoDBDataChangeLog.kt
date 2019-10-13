@@ -5,6 +5,7 @@ import com.github.cloudyrock.mongock.ChangeSet
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.security.crypto.password.PasswordEncoder
 import ru.fmtk.khlystov.culture_code.model.Country
 import ru.fmtk.khlystov.culture_code.model.Person
 import ru.fmtk.khlystov.culture_code.model.User
@@ -13,8 +14,8 @@ import ru.fmtk.khlystov.culture_code.model.books.BookGenre
 import ru.fmtk.khlystov.culture_code.model.movies.Movie
 import ru.fmtk.khlystov.culture_code.model.movies.MovieGenre
 import ru.fmtk.khlystov.culture_code.model.music.MusicGenre
-import java.util.UUID
-
+import ru.fmtk.khlystov.culture_code.security.Roles
+import java.util.*
 
 
 @ChangeLog(order = "001")
@@ -71,18 +72,21 @@ class InitMongoDBDataChangeLog {
         }
     }
 
-    /*@ChangeSet(order = "006", id = "initUsers", author = "khlystov", runAlways = false)
+    @ChangeSet(order = "006", id = "initUsers", author = "khlystov", runAlways = false)
     fun initUsers(template: MongoTemplate,
                   passwordEncoder: PasswordEncoder) {
-        fun getRndUser(name: String, roles: Set<String> = setOf("User")): User {
+        fun getRndUser(name: String, roles: Set<Roles> = setOf(Roles.User)): User {
             val password = UUID.randomUUID().toString()
-            val user = User(null, name, password = passwordEncoder.encode(password), roles = roles)
+            val user = User(null,
+                    name,
+                    password = passwordEncoder.encode(password),
+                    roles = roles.asSequence().map(Roles::toString).toSet())
             log.info("Created admin user with name \"${user.name}\" and password $password")
             return user
         }
-        template.save(getRndUser("Admin", setOf("Admin", "User")))
+        template.save(getRndUser("Admin", setOf(Roles.Admin, Roles.User)))
         template.save(getRndUser("User"))
-    }*/
+    }
 }
 
 private fun <T, R> MongoTemplate.insertAllWithTransform(sequence: Sequence<T>,
