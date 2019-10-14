@@ -10,7 +10,7 @@ import ru.fmtk.khlystov.culture_code.model.User
 @Document(collection = "Ratings_UserItemRating")
 @CompoundIndexes(CompoundIndex(name = "itemTypeAndId", def = "{'itemType' : 1, 'itemId': 1}"))
 data class UserItemRating(@Id val id: String?,
-                          @DBRef val user: User,
+                          @DBRef val userId: String,
                           val itemType: ItemType,
                           val itemId: String,
                           val rating: Short)
