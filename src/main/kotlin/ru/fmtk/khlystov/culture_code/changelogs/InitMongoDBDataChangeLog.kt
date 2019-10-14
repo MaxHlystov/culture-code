@@ -21,8 +21,6 @@ import java.util.*
 @ChangeLog(order = "001")
 class InitMongoDBDataChangeLog {
 
-    val log: Logger = LoggerFactory.getLogger(InitMongoDBDataChangeLog::class.java)
-
     @ChangeSet(order = "000", id = "initBookGenres", author = "khlystov", runAlways = false)
     fun initBookGenres(template: MongoTemplate) {
         val seqOfBooks = getListsOfBookGenres().asSequence()
@@ -72,21 +70,6 @@ class InitMongoDBDataChangeLog {
         }
     }
 
-    @ChangeSet(order = "006", id = "initUsers", author = "khlystov", runAlways = false)
-    fun initUsers(template: MongoTemplate,
-                  passwordEncoder: PasswordEncoder) {
-        fun getRndUser(name: String, roles: Set<Roles> = setOf(Roles.User)): User {
-            val password = UUID.randomUUID().toString()
-            val user = User(null,
-                    name,
-                    password = passwordEncoder.encode(password),
-                    roles = roles.asSequence().map(Roles::toString).toSet())
-            log.info("Created admin user with name \"${user.name}\" and password $password")
-            return user
-        }
-        template.save(getRndUser("Admin", setOf(Roles.Admin, Roles.User)))
-        template.save(getRndUser("User"))
-    }
 }
 
 private fun <T, R> MongoTemplate.insertAllWithTransform(sequence: Sequence<T>,

@@ -11,8 +11,9 @@ import ru.fmtk.khlystov.culture_code.repository.UserRepository
 class CustomUserDetailsService(val userRepository: UserRepository): UserDetailsService {
     override fun loadUserByUsername(username: String?): UserDetails {
         if(username == null) { throw IllegalArgumentException("User name is null.") }
-        val user = userRepository.findByName(username) ?: throw UsernameNotFoundException("User Not Found")
-        return CustomUserDetails(user)
+        val user = userRepository.findByName(username)
+        if(user.isEmpty) { throw UsernameNotFoundException("User Not Found") }
+        return CustomUserDetails(user.get())
     }
 }
 
