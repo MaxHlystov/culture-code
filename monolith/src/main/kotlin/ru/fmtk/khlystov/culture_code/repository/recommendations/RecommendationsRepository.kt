@@ -7,5 +7,5 @@ import ru.fmtk.khlystov.culture_code.model.recomendations.Recommendations
 
 interface RecommendationsRepository : MongoRepository<Recommendations, String> {
 
-    fun findAllByUserIdAndItemId(userId: String, itemType: ItemType, pageable: Pageable): List<Recommendations>
+    fun findAllByUserIdAndItemType(userId: String, itemType: ItemType, pageable: Pageable): List<Recommendations>
 }
