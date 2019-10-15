@@ -6,7 +6,7 @@ import ru.fmtk.khlystov.culture_code.repository.ratings.UserItemRatingRepository
 class RatingServiceImpl(
         private val userItemRatingRepository: UserItemRatingRepository) : RatingService {
 
-    override fun setRating(userId: String, itemType: ItemType, itemId: String, rating: Short) {
+    override fun setRating(userId: String, itemType: ItemType, itemId: String, rating: Float) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
