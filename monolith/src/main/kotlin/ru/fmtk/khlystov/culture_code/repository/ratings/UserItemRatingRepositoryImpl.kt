@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
+import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
 import java.util.*
 
@@ -25,12 +26,14 @@ open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate
                 UserItemRating::class.java))
     }
 
-    override fun getAVGRatings(): List<ItemAvgRating> {
+    override fun getAVGRatingsForItemType(itemType: ItemType, limit: Long): List<ItemAvgRating> {
         val aggregation = newAggregation(UserItemRating::class.java,
+                match(Criteria.where("ItemType").`is`(itemType)),
                 group("itemType", "itemId").avg("rating").`as`("avgRating"),
                 project("avgRating").and("itemType").previousOperation()
                         .and("itemId").previousOperation(),
-                sort(Sort.Direction.DESC, "avgRating")
+                sort(Sort.Direction.DESC, "avgRating"),
+                limit(limit)
         )
         val groupResults = mongoTemplate.aggregate(aggregation, ItemAvgRating::class.java)
         return groupResults.mappedResults
