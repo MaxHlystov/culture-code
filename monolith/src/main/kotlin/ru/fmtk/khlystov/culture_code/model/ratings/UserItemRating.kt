@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document(collection = "Ratings_UserItemRating")
 @CompoundIndexes(CompoundIndex(name = "itemTypeAndId", def = "{'userId' : 1, 'itemType' : 1, 'itemId': 1}"))
 data class UserItemRating(@Id val id: String?,
-                          @Indexed val userId: String,
+                          val userId: String,
                           val itemType: ItemType,
                           val itemId: String,
                           val rating: Float)
