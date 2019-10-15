@@ -5,6 +5,6 @@ import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 
 @Service
 interface RatingService {
-    fun setRating(userId: String, itemType: ItemType, itemId: String, rating: Float)
-    fun clearRating(userId: String, itemType: ItemType, itemId: String)
+    fun setRating(userId: String, itemType: ItemType, itemId: String, rating: Float): Boolean
+    fun clearRating(userId: String, itemType: ItemType, itemId: String): Boolean
 }
