@@ -13,4 +13,4 @@ data class UserItemRating(@Id val id: String?,
                           @DBRef val userId: String,
                           val itemType: ItemType,
                           val itemId: String,
-                          val rating: Short)
+                          val rating: Float)

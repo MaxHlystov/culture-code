@@ -8,7 +8,7 @@ import ru.fmtk.khlystov.culture_code.model.recomendations.Recomendations
 interface RecomendationService {
     // Returns recommendations for given user and item type.
     // Number - is the count of recommendations requested.
-    fun getRecommendations(userId: String, itemType: ItemType, number: Short): Recomendations
+    fun getRecommendations(userId: String, itemType: ItemType, number: Float): Recomendations
 
     // Mark recommendations as seen.
     fun checkRecommendation(userId: String, itemType: ItemType, itemsIds: Set<String>)

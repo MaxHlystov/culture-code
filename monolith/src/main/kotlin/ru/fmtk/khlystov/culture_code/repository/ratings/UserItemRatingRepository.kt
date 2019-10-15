@@ -5,4 +5,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
 
 @RepositoryRestResource(path = "UserItemRating")
-interface UserItemRatingRepository: MongoRepository<UserItemRating, String>
+interface UserItemRatingRepository: MongoRepository<UserItemRating, String> {
+    getAvgRatings()
+}
