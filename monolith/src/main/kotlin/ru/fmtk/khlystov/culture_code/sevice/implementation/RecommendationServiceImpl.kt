@@ -1,4 +1,4 @@
-package ru.fmtk.khlystov.culture_code.sevice
+package ru.fmtk.khlystov.culture_code.sevice.implementation
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -6,16 +6,17 @@ import org.springframework.stereotype.Service
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.recomendations.Recommendations
-import ru.fmtk.khlystov.culture_code.repository.UserRepository
-import ru.fmtk.khlystov.culture_code.repository.ratings.UserItemRatingRepository
 import ru.fmtk.khlystov.culture_code.repository.recommendations.RecommendationsRepository
+import ru.fmtk.khlystov.culture_code.sevice.RatingService
+import ru.fmtk.khlystov.culture_code.sevice.RecommendationService
+import ru.fmtk.khlystov.culture_code.sevice.UsersService
 import ru.fmtk.khlystov.culture_code.sevice.dto.RecommendationsDTO
 
 @Service
 class RecommendationServiceImpl(
         private val recommendationsRepository: RecommendationsRepository,
-        private val userItemRatingRepository: UserItemRatingRepository,
-        private val userRepository: UserRepository
+        private val ratingService: RatingService,
+        private val usersService: UsersService
 ) : RecommendationService {
 
     override fun getRecommendations(userId: String, itemType: ItemType, number: Short): RecommendationsDTO {
@@ -27,7 +28,7 @@ class RecommendationServiceImpl(
 
     override fun computeRecommendations() {
         val sort = Sort.by("id").descending()
-        val users = userRepository.findAll(sort)
+        val users = usersService.findAll(sort)
                 .mapNotNull { user -> user.id }
                 .toCollection(ArrayList<String>())
         val closeness = getUsersCloseness(users)
@@ -40,7 +41,7 @@ class RecommendationServiceImpl(
                 } else {
                     // Search for items with the biggest average rating
                     if (!avgRatings.containsKey(itemType)) {
-                        avgRatings[itemType] = userItemRatingRepository.getAVGRatingsForItemType(itemType)
+                        avgRatings[itemType] = ratingService.getAVGRatingsForItemType(itemType)
 
                     }
                 }
@@ -57,7 +58,7 @@ class RecommendationServiceImpl(
                     .map { idx -> usersIds[idx] }
                     .map { secondUserId ->
                         secondUserId to
-                                userItemRatingRepository.getClosenessByRating(firstUserId, secondUserId)
+                                ratingService.getClosenessByRating(firstUserId, secondUserId)
                     }
                     .toMap()
         }
