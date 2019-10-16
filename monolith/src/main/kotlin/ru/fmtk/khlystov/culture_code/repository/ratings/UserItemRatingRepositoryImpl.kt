@@ -39,7 +39,7 @@ open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate
 
     }
 
-    override fun getClosestByRating(firstUserId: String, secondUserId: String): Float {
+    override fun getClosenessByRating(firstUserId: String, secondUserId: String): Float {
         return 0F
     }
 }

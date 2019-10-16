@@ -11,12 +11,14 @@ import java.util.*
 @RepositoryRestResource(path = "UserItemRating")
 interface UserItemRatingRepository : MongoRepository<UserItemRating, String>, UserItemRatingRepositoryCustom {
     fun findAllByUserIdAndItemTypeAndRatingGreaterThan(
-            userId: String, itemType: ItemType, ratingGreaterThen: Float, pageable: Pageable): Set<UserItemRating>
+            userId: String, itemType: ItemType, ratingGreaterThen: Float, pageable: Pageable): List<UserItemRating>
 }
 
 interface UserItemRatingRepositoryCustom {
+
     fun save(userItemRating: UserItemRating): Optional<UserItemRating>
 
     fun getAVGRatingsForItemType(itemType: ItemType): List<ItemAvgRating>
-    fun getClosestByRating(firstUserId: String, secondUserId: String): Float
+
+    fun getClosenessByRating(firstUserId: String, secondUserId: String): Float
 }

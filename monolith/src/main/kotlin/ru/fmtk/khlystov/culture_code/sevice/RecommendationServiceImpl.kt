@@ -48,20 +48,18 @@ class RecommendationServiceImpl(
         }
     }
 
-    private fun getUsersCloseness(usersIds: ArrayList<String>, numberOfUsers: Int = 5): Map<String, Map<String, Float>> {
+    private fun getUsersCloseness(usersIds: ArrayList<String>): Map<String, Map<String, Float>> {
         val usersNumber = usersIds.size
-        var closestUsers = HashMap<String, HashMap<String, Float>>()
+        var closestUsers = HashMap<String, Map<String, Float>>()
         for (first in 0 until usersNumber) {
             val firstUserId = usersIds[first]
-            closestUsers[firstUserId] = (first until usersNumber).asSequence()
-                        .map { idx -> usersIds[idx] }
-                        .map { secondUserId ->
-                            secondUserId to
-                                    userItemRatingRepository.getClosestByRating(firstUserId, secondUserId)
-                        }
-                        .sortedByDescending { (_, closeness) -> closeness }
-                        .toMap()
-            }
+            closestUsers[firstUserId] = (first + 1 until usersNumber).asSequence()
+                    .map { idx -> usersIds[idx] }
+                    .map { secondUserId ->
+                        secondUserId to
+                                userItemRatingRepository.getClosenessByRating(firstUserId, secondUserId)
+                    }
+                    .toMap()
         }
         return closestUsers
     }
