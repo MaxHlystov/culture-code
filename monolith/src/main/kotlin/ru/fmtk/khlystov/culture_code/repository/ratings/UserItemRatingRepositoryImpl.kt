@@ -26,17 +26,20 @@ open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate
                 UserItemRating::class.java))
     }
 
-    override fun getAVGRatingsForItemType(itemType: ItemType, limit: Long): List<ItemAvgRating> {
+    override fun getAVGRatingsForItemType(itemType: ItemType): List<ItemAvgRating> {
         val aggregation = newAggregation(UserItemRating::class.java,
                 match(Criteria.where("ItemType").`is`(itemType)),
                 group("itemType", "itemId").avg("rating").`as`("avgRating"),
                 project("avgRating").and("itemType").previousOperation()
                         .and("itemId").previousOperation(),
-                sort(Sort.Direction.DESC, "avgRating"),
-                limit(limit)
+                sort(Sort.Direction.DESC, "avgRating")
         )
         val groupResults = mongoTemplate.aggregate(aggregation, ItemAvgRating::class.java)
         return groupResults.mappedResults
 
+    }
+
+    override fun getClosestByRating(firstUserId: String, secondUserId: String): Float {
+        return 0F
     }
 }

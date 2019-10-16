@@ -17,5 +17,6 @@ interface UserItemRatingRepository : MongoRepository<UserItemRating, String>, Us
 interface UserItemRatingRepositoryCustom {
     fun save(userItemRating: UserItemRating): Optional<UserItemRating>
 
-    fun getAVGRatingsForItemType(itemType: ItemType, limit: Long = 5): List<ItemAvgRating>
+    fun getAVGRatingsForItemType(itemType: ItemType): List<ItemAvgRating>
+    fun getClosestByRating(firstUserId: String, secondUserId: String): Float
 }
