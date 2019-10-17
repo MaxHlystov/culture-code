@@ -27,7 +27,7 @@ class RecommendationServiceImpl(
     }
 
     override fun computeRecommendations() {
-        val sort = Sort.by("id").descending()
+        val sort = Sort.by("id").ascending()
         val users = usersService.findAll(sort)
                 .mapNotNull { user -> user.id }
                 .toCollection(ArrayList<String>())
@@ -49,18 +49,19 @@ class RecommendationServiceImpl(
         }
     }
 
-    private fun getUsersCloseness(usersIds: ArrayList<String>): Map<String, Map<String, Float>> {
+    fun getUsersCloseness(usersIds: ArrayList<String>): Map<String, Map<String, Float>> {
         val usersNumber = usersIds.size
         var closestUsers = HashMap<String, Map<String, Float>>()
         for (first in 0 until usersNumber) {
             val firstUserId = usersIds[first]
-            closestUsers[firstUserId] = (first + 1 until usersNumber).asSequence()
-                    .map { idx -> usersIds[idx] }
-                    .map { secondUserId ->
-                        secondUserId to
-                                ratingService.getClosenessByRating(firstUserId, secondUserId)
-                    }
-                    .toMap()
+            val a = ratingService.getClosenessByRating(firstUserId)
+//            closestUsers[firstUserId] = (first + 1 until usersNumber).asSequence()
+//                    .map { idx -> usersIds[idx] }
+//                    .map { secondUserId ->
+//                        secondUserId to
+//                                ratingService.getClosenessByRating(firstUserId)
+//                    }
+//                    .toMap()
         }
         return closestUsers
     }

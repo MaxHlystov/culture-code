@@ -3,12 +3,11 @@ package ru.fmtk.khlystov.culture_code.repository.ratings
 import org.springframework.data.domain.Pageable
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
-import org.springframework.data.repository.query.Param
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
-import org.springframework.stereotype.Repository
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
+import ru.fmtk.khlystov.culture_code.model.recomendations.TwoUsersCloseness
 import java.util.*
 
 @RepositoryRestResource(path = "UserItemRating")
@@ -25,5 +24,5 @@ interface UserItemRatingRepositoryCustom {
 
     fun getAVGRatingsForItemType(itemType: ItemType): List<ItemAvgRating>
 
-    fun getClosenessByRating(firstUserId: String, secondUserId: String): Float
+    fun getClosenessByRating(firstUserId: String): List<TwoUsersCloseness>
 }

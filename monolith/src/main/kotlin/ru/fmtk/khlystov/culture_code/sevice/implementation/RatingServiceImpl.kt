@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
+import ru.fmtk.khlystov.culture_code.model.recomendations.TwoUsersCloseness
 import ru.fmtk.khlystov.culture_code.repository.ratings.UserItemRatingRepository
 import ru.fmtk.khlystov.culture_code.sevice.RatingService
 
@@ -27,6 +28,6 @@ class RatingServiceImpl(
     override fun getAVGRatingsForItemType(itemType: ItemType): List<ItemAvgRating> =
             userItemRatingRepository.getAVGRatingsForItemType(itemType)
 
-    override fun getClosenessByRating(firstUserId: String, secondUserId: String): Float =
-            userItemRatingRepository.getClosenessByRating(firstUserId, secondUserId)
+    override fun getClosenessByRating(firstUserId: String): List<TwoUsersCloseness> =
+            userItemRatingRepository.getClosenessByRating(firstUserId)
 }

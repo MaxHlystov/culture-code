@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Update
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
+import ru.fmtk.khlystov.culture_code.model.recomendations.TwoUsersCloseness
 import java.util.*
 
 
@@ -37,10 +38,27 @@ open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate
         )
         val groupResults = mongoTemplate.aggregate(aggregation, ItemAvgRating::class.java)
         return groupResults.mappedResults
-
     }
 
-    override fun getClosenessByRating(firstUserId: String, secondUserId: String): Float {
-        return 0F
+    override fun getClosenessByRating(userId: String): List<TwoUsersCloseness> {
+        val aggregation = newAggregation(UserItemRating::class.java,
+                match(Criteria.where("userId").`is`(userId)
+                        .and("rating").gt(0.0)),
+                lookup("Ratings_UserItemRating", "itemId", "itemId", "items"),
+                unwind("\$items"),
+                project().andExclude("_id")
+                        .andExpression("userId < items.userId").`as`("mid")
+                        .andExpression("rating * items.rating").`as`("mul")
+                        .and("userId").`as`("first")
+                        .and("items.userId").`as`("second"),
+                match(Criteria.where("mid").`is`(true)),
+                group("first", "second").sum("mul").`as`("closeness"),
+                match(Criteria.where("closeness").gt(0)),
+                project("closeness").and("_id.first").`as`("firstUserId")
+                        .and("_id.second").`as`("secondUserId"),
+                sort(Sort.Direction.DESC, "closeness")
+        )
+        val groupResults = mongoTemplate.aggregate(aggregation, TwoUsersCloseness::class.java)
+        return groupResults.mappedResults
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
+import ru.fmtk.khlystov.culture_code.model.recomendations.TwoUsersCloseness
 
 @Service
 interface RatingService {
@@ -13,5 +14,5 @@ interface RatingService {
     fun findAllByUserIdAndItemTypeAndRatingGreaterThan(
             userId: String, itemType: ItemType, ratingGreaterThen: Float, pageable: Pageable): List<UserItemRating>
     fun getAVGRatingsForItemType(itemType: ItemType): List<ItemAvgRating>
-    fun getClosenessByRating(firstUserId: String, secondUserId: String): Float
+    fun getClosenessByRating(firstUserId: String): List<TwoUsersCloseness>
 }
