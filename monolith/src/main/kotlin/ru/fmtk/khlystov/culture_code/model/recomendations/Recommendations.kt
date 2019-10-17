@@ -9,7 +9,8 @@ import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import java.time.LocalDateTime
 
 @Document(collection = "Recommendations_Recommendations")
-@CompoundIndexes(CompoundIndex(name = "itemTypeAndId", def = "{'userId' : 1, 'itemType' : 1, 'itemId': 1}"))
+@CompoundIndexes(CompoundIndex(name = "UserIdAndItemTypeAndId", def = "{'userId' : 1, 'itemType' : 1, 'itemId': 1}"),
+    CompoundIndex(name = "ItemTypeAndId", def = "{'itemType' : 1, 'itemId': 1}"))
 data class Recommendations(@Id val id: String,
                            val userId: String,
                            val itemType: ItemType,
