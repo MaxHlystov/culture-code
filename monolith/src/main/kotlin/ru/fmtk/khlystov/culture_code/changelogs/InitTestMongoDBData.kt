@@ -17,7 +17,13 @@ class InitTestMongoDBData {
     var passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
     lateinit var usersInDB: List<User>
 
-    fun setUsersForTests(template: MongoTemplate) {
+    fun run(template: MongoTemplate) {
+        setUsersForTests(template)
+        initUserRatingsForBooks(template)
+        initUserRatingsForMovies(template)
+    }
+
+    private fun setUsersForTests(template: MongoTemplate) {
         val password = passwordEncoder.encode("111111")
         val userRoles = setOf(Roles.User.toString())
         val users = (1..10).map { idx ->
@@ -28,7 +34,7 @@ class InitTestMongoDBData {
                 .toList()
     }
 
-    fun initUserRatingsForBooks(template: MongoTemplate) {
+    private fun initUserRatingsForBooks(template: MongoTemplate) {
         val allBooks = template.findAll(Book::class.java).filter { book -> book.id != null }
         val booksNumber = allBooks.size
         val ratings = usersInDB.mapIndexed { index, user -> index to user }
@@ -45,7 +51,7 @@ class InitTestMongoDBData {
         template.insertAll<UserItemRating>(ratings)
     }
 
-    fun initUserRatingsForMovies(template: MongoTemplate) {
+    private fun initUserRatingsForMovies(template: MongoTemplate) {
         val allMovies = template.findAll(Movie::class.java).filter { movie -> movie.id != null }
         val moviesNumber = allMovies.size
         val ratings = usersInDB.mapIndexed { index, user -> index to user }

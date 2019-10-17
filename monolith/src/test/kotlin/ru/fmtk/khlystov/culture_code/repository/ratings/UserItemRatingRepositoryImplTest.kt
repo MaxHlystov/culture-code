@@ -35,10 +35,8 @@ internal class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
     }
 
     @BeforeEach
-    fun initRaitings() {
-        initTestMongoDBData.setUsersForTests(mongoTemplate)
-        initTestMongoDBData.initUserRatingsForBooks(mongoTemplate)
-        initTestMongoDBData.initUserRatingsForMovies(mongoTemplate)
+    fun initRatings() {
+        initTestMongoDBData.run(mongoTemplate)
     }
 
     @DisplayName(" return average ratings by types of items.")

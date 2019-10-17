@@ -2,20 +2,15 @@ package ru.fmtk.khlystov.culture_code.changelogs
 
 import com.github.cloudyrock.mongock.ChangeLog
 import com.github.cloudyrock.mongock.ChangeSet
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.security.crypto.password.PasswordEncoder
+import ru.fmtk.khlystov.culture_code.changelogs.collections.*
 import ru.fmtk.khlystov.culture_code.model.Country
 import ru.fmtk.khlystov.culture_code.model.Person
-import ru.fmtk.khlystov.culture_code.model.User
 import ru.fmtk.khlystov.culture_code.model.books.Book
 import ru.fmtk.khlystov.culture_code.model.books.BookGenre
 import ru.fmtk.khlystov.culture_code.model.movies.Movie
 import ru.fmtk.khlystov.culture_code.model.movies.MovieGenre
 import ru.fmtk.khlystov.culture_code.model.music.MusicGenre
-import ru.fmtk.khlystov.culture_code.security.Roles
-import java.util.*
 
 
 @ChangeLog(order = "001")

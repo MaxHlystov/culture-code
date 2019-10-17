@@ -1,4 +1,4 @@
-package ru.fmtk.khlystov.culture_code.changelogs
+package ru.fmtk.khlystov.culture_code.changelogs.collections
 
 import ru.fmtk.khlystov.culture_code.model.Country
 
