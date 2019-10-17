@@ -28,10 +28,11 @@ open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate
 
     override fun getAVGRatingsForItemType(itemType: ItemType): List<ItemAvgRating> {
         val aggregation = newAggregation(UserItemRating::class.java,
-                match(Criteria.where("ItemType").`is`(itemType)),
+                match(Criteria.where("ItemType").`is`(itemType)
+                        .and("rating").gt(0.0)),
                 group("itemType", "itemId").avg("rating").`as`("avgRating"),
-                project("avgRating").and("itemType").previousOperation()
-                        .and("itemId").previousOperation(),
+                project("avgRating").and("_id.itemType").`as`("itemType")
+                        .and("_id.itemId").`as`("itemId"),
                 sort(Sort.Direction.DESC, "avgRating")
         )
         val groupResults = mongoTemplate.aggregate(aggregation, ItemAvgRating::class.java)
