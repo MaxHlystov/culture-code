@@ -5,12 +5,12 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
-import ru.fmtk.khlystov.culture_code.model.recomendations.Recommendations
+import ru.fmtk.khlystov.culture_code.model.recomendations.Recommendation
 import ru.fmtk.khlystov.culture_code.repository.recommendations.RecommendationsRepository
 import ru.fmtk.khlystov.culture_code.sevice.RatingService
 import ru.fmtk.khlystov.culture_code.sevice.RecommendationService
 import ru.fmtk.khlystov.culture_code.sevice.UsersService
-import ru.fmtk.khlystov.culture_code.sevice.dto.RecommendationsDTO
+import ru.fmtk.khlystov.culture_code.sevice.dto.RecommendationDTO
 
 @Service
 class RecommendationServiceImpl(
@@ -19,13 +19,29 @@ class RecommendationServiceImpl(
         private val usersService: UsersService
 ) : RecommendationService {
 
-    override fun getRecommendations(userId: String, itemType: ItemType, number: Short): RecommendationsDTO {
-        val pageable = PageRequest.of(0, 5, Sort.by("rating").descending())
-        return RecommendationsDTO(userId, itemType,
-                recommendationsRepository.findAllByUserIdAndItemType(userId, itemType, pageable)
-                        .map(Recommendations::itemId).toSet())
+    companion object {
+        const val RECOMMENDATION_SERVICE__MIN_NEIGHBOURS_TO_COMPUTE = 2
     }
 
+    override fun getRecommendations(userId: String, itemType: ItemType, number: Short): RecommendationDTO {
+        val pageable = PageRequest.of(0, 5, Sort.by("rating").descending())
+        return RecommendationDTO(userId, itemType,
+                recommendationsRepository.findAllByUserIdAndItemType(userId, itemType, pageable)
+                        .map(Recommendation::itemId).toSet())
+    }
+
+    override fun checkRecommendations(recommendations: Collection<RecommendationDTO>) {
+        recommendationsRepository.setRecommendationsAsChecked()
+    }
+
+    /* Алгоритм расчета:
+        1.   Определяем близость пользователей скалярным произведением векторов их оценок.
+        2.   Если у пользователя оценок меньше порогового значения (10), рассчитываем предложения исходя
+             из средних оценок позиций.
+        3.   Для всех остальных определяем пять ближайших соседей (максимум коэффициента близости из п. 1).
+        4.   По этим соседям усредняем оценки для позиций, которые пользователь еще не оценил, отбираем
+             первые 10 максимальных, и записываем в таблицу рекомендаций.
+    */
     override fun computeRecommendations() {
         val sort = Sort.by("id").ascending()
         val users = usersService.findAll(sort)
@@ -35,8 +51,8 @@ class RecommendationServiceImpl(
         val avgRatings = HashMap<ItemType, List<ItemAvgRating>>()
         for (itemType in ItemType.values()) {
             for (user in users) {
-                if (closeness.containsKey(user)) {
-                    val neighbors = closeness[user]
+                val neighbours = closeness.getOrDefault(user, HashMap())
+                if (neighbours.size < RECOMMENDATION_SERVICE__MIN_NEIGHBOURS_TO_COMPUTE) {
 
                 } else {
                     // Search for items with the biggest average rating

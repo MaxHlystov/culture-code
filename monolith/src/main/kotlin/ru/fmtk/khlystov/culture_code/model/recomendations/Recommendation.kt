@@ -10,12 +10,17 @@ import java.time.LocalDateTime
 
 @Document(collection = "Recommendations_Recommendations")
 @CompoundIndexes(CompoundIndex(name = "UserIdAndItemTypeAndId", def = "{'userId' : 1, 'itemType' : 1, 'itemId': 1}"),
-    CompoundIndex(name = "ItemTypeAndId", def = "{'itemType' : 1, 'itemId': 1}"))
-data class Recommendations(@Id val id: String,
-                           val userId: String,
-                           val itemType: ItemType,
-                           val itemId: String,
-                           val checked: Boolean,
-                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                           val checkedDate: LocalDateTime) {
+        CompoundIndex(name = "ItemTypeAndId", def = "{'itemType' : 1, 'itemId': 1}"))
+data class Recommendation(@Id val id: String?,
+                          val userId: String,
+                          val itemType: ItemType,
+                          val itemId: String,
+                          val checked: Boolean,
+                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                          val checkedDate: LocalDateTime) {
+
+    fun getChecked(): Recommendation = if (this.checked) { this }
+    else {
+        Recommendation(id, userId, itemType, itemId, true, LocalDateTime.now())
+    }
 }
