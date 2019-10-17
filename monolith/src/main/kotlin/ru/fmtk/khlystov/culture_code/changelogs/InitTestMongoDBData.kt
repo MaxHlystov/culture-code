@@ -10,6 +10,8 @@ import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
 import ru.fmtk.khlystov.culture_code.security.Roles
 
+// User for test initialization and for tests in imbedded mongo.
+//
 class InitTestMongoDBData {
 
     var passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
