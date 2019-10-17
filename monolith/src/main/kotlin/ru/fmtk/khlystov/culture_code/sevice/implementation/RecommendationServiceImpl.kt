@@ -32,7 +32,7 @@ class RecommendationServiceImpl(
     }
 
     override fun checkRecommendations(recommendations: Collection<Recommendation>) {
-        recommendationsRepository.setRecommendationsAsChecked(recommendations)
+        //recommendationsRepository.setRecommendationsAsChecked(recommendations)
     }
 
     override fun computeRecommendations() {
