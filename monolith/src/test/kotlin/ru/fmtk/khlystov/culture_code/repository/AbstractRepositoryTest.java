@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 
 @DataMongoTest
-//@EnableConfigurationProperties
-@ComponentScan({"ru.fmtk.khlystov.culture_code.config"}) //, "ru.fmtk.khlystov.culture_code.repository"})
+@EnableConfigurationProperties
+@ComponentScan({"ru.fmtk.khlystov.culture_code.config"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class AbstractRepositoryTest {
 }

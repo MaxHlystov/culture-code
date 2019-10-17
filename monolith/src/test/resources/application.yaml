@@ -3,3 +3,7 @@ spring:
     mongodb:
       port: 0
       database: test
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
