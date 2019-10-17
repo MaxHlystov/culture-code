@@ -14,34 +14,13 @@ import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
 
 @Import(value = [UserItemRatingRepositoryImpl::class])
-//@WebAppConfiguration
 @SpringBootTest
-//@WebMvcTest
 @ExtendWith(SpringExtension::class)
 @DisplayName("UserItemRatingRepository must")
 internal class UserItemRatingRepositoryTest { //: AbstractRepositoryTest() {
 
     @Autowired
     lateinit var userItemRatingRepository: UserItemRatingRepository
-
-//    @Autowired
-//    lateinit var bookRepository: BookRepository
-//
-//    @Autowired
-//    lateinit var movieRepository: MovieRepository
-//
-//    lateinit var allBooks: Map<String, Book>
-//    lateinit var allMovies: Map<String, Movie>
-//
-//    @BeforeEach
-//    internal fun beforeEach() {
-//        allBooks = bookRepository.findAll()
-//                .filter { book -> book.id != null }
-//                .associate { book -> (book.id ?: "") to book }
-//        allMovies = movieRepository.findAll()
-//                .filter { movie -> movie.id != null }
-//                .associate { movie -> (movie.id ?: "") to movie }
-//    }
 
     @DisplayName(" return average ratings by types of items.")
     @Test
