@@ -60,5 +60,9 @@ internal class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
     @DisplayName(" return closeness of users.")
     @Test
     fun getClosenessByRating() {
+        val allRatings = userItemRatingRepository.findAll().filterNotNull()
+        val userId = allRatings.first().userId
+        val userCloseness = userItemRatingRepository.getClosenessByRating(userId)
+        assertEquals(15, userCloseness.size)
     }
 }
