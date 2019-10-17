@@ -3,6 +3,7 @@
 *.iml
 *.ipr
 /out/
+/monolith/out/
 .idea/
 
 ### Gradle ###
@@ -36,11 +37,4 @@ bin/
 ### Another files ###
 .log
 HELP.md
-
-
-
-
-
-
-
 
