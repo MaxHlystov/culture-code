@@ -6,5 +6,5 @@ import ru.fmtk.khlystov.culture_code.sevice.dto.UserDTO
 
 @Service
 interface UsersService {
-    fun findAll(sort: Sort): Iterable<UserDTO>
+    fun findAllSortedById(): Iterable<UserDTO>
 }

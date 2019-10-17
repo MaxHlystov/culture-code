@@ -25,9 +25,15 @@ class RatingServiceImpl(
             userItemRatingRepository.findAllByUserIdAndItemTypeAndRatingGreaterThan(
                     userId, itemType, ratingGreaterThen, pageable)
 
-    override fun getAVGRatingsForItemType(itemType: ItemType): List<ItemAvgRating> =
-            userItemRatingRepository.getAVGRatingsForItemType(itemType)
+    override fun getAVGRatingsForItemType(itemType: ItemType, excludeUserId: String, limit: Long): List<ItemAvgRating> =
+            userItemRatingRepository.getAVGRatingsForItemType(itemType, excludeUserId, limit)
 
-    override fun getClosenessByRating(firstUserId: String): List<TwoUsersCloseness> =
-            userItemRatingRepository.getClosenessByRating(firstUserId)
+    override fun getAVGRatingsByUsersIds(itemType: ItemType,
+                                         excludeUserId: String,
+                                         usersIds: Collection<String>,
+                                         limit: Long): List<ItemAvgRating> =
+            userItemRatingRepository.getAVGRatingsByUsersIds(itemType, excludeUserId, usersIds, limit)
+
+    override fun getClosenessByRating(userId: String, limit: Long): List<TwoUsersCloseness> =
+            userItemRatingRepository.getClosenessByRating(userId, limit)
 }

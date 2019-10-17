@@ -14,6 +14,7 @@ import java.util.*
 interface UserItemRatingRepository : MongoRepository<UserItemRating, String>, UserItemRatingRepositoryCustom {
     @Query("{ 'itemType': ?0, 'rating': { \$gt: 0} }")
     fun findAllByItemType(itemType: ItemType): List<UserItemRating>
+
     fun findAllByUserIdAndItemTypeAndRatingGreaterThan(
             userId: String, itemType: ItemType, ratingGreaterThen: Float, pageable: Pageable): List<UserItemRating>
 }
@@ -22,7 +23,12 @@ interface UserItemRatingRepositoryCustom {
 
     fun save(userItemRating: UserItemRating): Optional<UserItemRating>
 
-    fun getAVGRatingsForItemType(itemType: ItemType): List<ItemAvgRating>
+    fun getAVGRatingsForItemType(itemType: ItemType, excludeUserId: String, limit: Long): List<ItemAvgRating>
 
-    fun getClosenessByRating(firstUserId: String): List<TwoUsersCloseness>
+    fun getAVGRatingsByUsersIds(itemType: ItemType,
+                                excludeUserId: String,
+                                usersIds: Collection<String>,
+                                limit: Long): List<ItemAvgRating>
+
+    fun getClosenessByRating(firstUserId: String, limit: Long): List<TwoUsersCloseness>
 }

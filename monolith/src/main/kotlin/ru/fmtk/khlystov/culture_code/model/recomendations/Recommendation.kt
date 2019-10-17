@@ -15,9 +15,9 @@ data class Recommendation(@Id val id: String?,
                           val userId: String,
                           val itemType: ItemType,
                           val itemId: String,
-                          val checked: Boolean,
+                          val checked: Boolean = false,
                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                          val checkedDate: LocalDateTime) {
+                          val checkedDate: LocalDateTime = LocalDateTime.now()) {
 
     fun getChecked(): Recommendation = if (this.checked) { this }
     else {

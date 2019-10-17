@@ -8,7 +8,8 @@ import ru.fmtk.khlystov.culture_code.sevice.dto.UserDTO
 
 @Service
 class UsersServiceImpl(private val userRepository: UserRepository): UsersService {
-    override fun findAll(sort: Sort): Iterable<UserDTO> {
+    override fun findAllSortedById(): Iterable<UserDTO> {
+        val sort = Sort.by("id").ascending()
         return userRepository.findAll(sort)
                 .mapNotNull { user -> UserDTO(user.id, user.name, user.email) }
     }
