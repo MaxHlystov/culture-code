@@ -41,9 +41,17 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.batch:spring-batch-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.1")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.5.1")
+    testImplementation("org.junit.platform:junit-platform-commons:1.4.2")
+    testRuntime("org.junit.platform:junit-platform-engine:1.4.2")
+
 }
 
 tasks.withType<KotlinCompile> {
