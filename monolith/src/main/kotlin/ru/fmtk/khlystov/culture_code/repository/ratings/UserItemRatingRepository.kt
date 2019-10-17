@@ -11,8 +11,7 @@ import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
 import java.util.*
 
-//@RepositoryRestResource(path = "UserItemRating")
-@Repository
+@RepositoryRestResource(path = "UserItemRating")
 interface UserItemRatingRepository : MongoRepository<UserItemRating, String>, UserItemRatingRepositoryCustom {
     @Query("{ 'itemType': ?0, 'rating': { \$gt: 0} }")
     fun findAllByItemType(itemType: ItemType): List<UserItemRating>

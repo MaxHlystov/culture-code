@@ -16,9 +16,9 @@ import java.util.*
 open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate) : UserItemRatingRepositoryCustom {
     override fun save(userItemRating: UserItemRating): Optional<UserItemRating> {
         val query = Query.query(Criteria().andOperator(
-                Criteria.where("userId").`is`(userItemRating.userId), //ObjectId(userItemRating.userId)),
+                Criteria.where("userId").`is`(userItemRating.userId),
                 Criteria.where("itemType").`is`(userItemRating.itemType),
-                Criteria.where("itemId").`is`(userItemRating.itemId))) //ObjectId(userItemRating.itemId))))
+                Criteria.where("itemId").`is`(userItemRating.itemId)))
         val update = Update()
         update.set("rating", userItemRating.rating)
         return Optional.ofNullable(mongoTemplate.findAndModify(query, update,

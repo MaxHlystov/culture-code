@@ -1,7 +1,5 @@
 package ru.fmtk.khlystov.culture_code.changelogs
 
-import com.github.cloudyrock.mongock.ChangeLog
-import com.github.cloudyrock.mongock.ChangeSet
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -12,15 +10,13 @@ import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
 import ru.fmtk.khlystov.culture_code.security.Roles
 
-@ChangeLog(order = "002")
-class InitTestMongoDBDataChangelog {
+class InitTestMongoDBData {
 
     var passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
     lateinit var usersInDB: List<User>
 
-    @ChangeSet(order = "000", id = "settUsersForTests", author = "khlystov", runAlways = false)
-    fun settUsersForTests(template: MongoTemplate) {
-        val password = passwordEncoder.encode("111111") //UUID.randomUUID().toString()
+    fun setUsersForTests(template: MongoTemplate) {
+        val password = passwordEncoder.encode("111111")
         val userRoles = setOf(Roles.User.toString())
         val users = (1..10).map { idx ->
             User(null, "Test$idx", password = password, roles = userRoles)
@@ -30,7 +26,6 @@ class InitTestMongoDBDataChangelog {
                 .toList()
     }
 
-    @ChangeSet(order = "001", id = "initUserRatingsForBooks", author = "khlystov", runAlways = false)
     fun initUserRatingsForBooks(template: MongoTemplate) {
         val allBooks = template.findAll(Book::class.java).filter { book -> book.id != null }
         val booksNumber = allBooks.size
@@ -48,7 +43,6 @@ class InitTestMongoDBDataChangelog {
         template.insertAll<UserItemRating>(ratings)
     }
 
-    @ChangeSet(order = "002", id = "initUserRatingsForMovies", author = "khlystov", runAlways = false)
     fun initUserRatingsForMovies(template: MongoTemplate) {
         val allMovies = template.findAll(Movie::class.java).filter { movie -> movie.id != null }
         val moviesNumber = allMovies.size

@@ -2,25 +2,44 @@ package ru.fmtk.khlystov.culture_code.repository.ratings
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.data.mongodb.core.MongoTemplate
+import ru.fmtk.khlystov.culture_code.changelogs.InitTestMongoDBData
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
+import ru.fmtk.khlystov.culture_code.repository.AbstractRepositoryTest
 
-@Import(value = [UserItemRatingRepositoryImpl::class])
+@Import(value = [UserItemRatingRepositoryImpl::class, InitTestMongoDBData::class])
 @SpringBootTest
-@ExtendWith(SpringExtension::class)
 @DisplayName("UserItemRatingRepository must")
-internal class UserItemRatingRepositoryTest { //: AbstractRepositoryTest() {
+internal class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
 
     @Autowired
     lateinit var userItemRatingRepository: UserItemRatingRepository
+
+    @Autowired
+    lateinit var mongoTemplate: MongoTemplate
+
+    private var initTestMongoDBData = InitTestMongoDBData()
+
+    companion object {
+        private val log: Logger = LoggerFactory.getLogger(UserItemRatingRepositoryTest::class.java)
+    }
+
+    @BeforeEach
+    fun initRaitings() {
+        initTestMongoDBData.setUsersForTests(mongoTemplate)
+        initTestMongoDBData.initUserRatingsForBooks(mongoTemplate)
+        initTestMongoDBData.initUserRatingsForMovies(mongoTemplate)
+    }
 
     @DisplayName(" return average ratings by types of items.")
     @Test
@@ -33,11 +52,11 @@ internal class UserItemRatingRepositoryTest { //: AbstractRepositoryTest() {
                 }
                 .sortedBy(ItemAvgRating::itemId)
         val avg = userItemRatingRepository.getAVGRatingsForItemType(ItemType.BOOK)
-        //assertEquals(computedAvg.size, avg.size, " It needs to have ratings for all items.")
         assertTrue(avg.asSequence().zipWithNext()
                 .all { (first, second) -> first.avgRating >= second.avgRating },
                 "Ratings has to be ordered in decrease way.")
         assertEquals(computedAvg, avg.sortedBy(ItemAvgRating::itemId))
+        log.info("Number of average ratings is ${avg.size}")
     }
 
     @DisplayName(" return closeness of users.")
