@@ -12,6 +12,8 @@
 gradle/
 build/
 bin/
+gradlew
+gradlew.bat
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
