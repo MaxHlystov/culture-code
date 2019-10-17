@@ -3,11 +3,13 @@
 *.iml
 *.ipr
 /out/
+/monolith/out/
 .idea/
 
 ### Gradle ###
 .gradletasknamecache
 .gradle
+gradle/
 build/
 bin/
 !gradle/wrapper/gradle-wrapper.jar
