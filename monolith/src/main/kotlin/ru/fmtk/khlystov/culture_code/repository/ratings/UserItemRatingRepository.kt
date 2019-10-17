@@ -10,6 +10,7 @@ import java.util.*
 
 @RepositoryRestResource(path = "UserItemRating")
 interface UserItemRatingRepository : MongoRepository<UserItemRating, String>, UserItemRatingRepositoryCustom {
+    fun findAllByItemType(itemType: ItemType): List<UserItemRating>
     fun findAllByUserIdAndItemTypeAndRatingGreaterThan(
             userId: String, itemType: ItemType, ratingGreaterThen: Float, pageable: Pageable): List<UserItemRating>
 }
