@@ -10,7 +10,7 @@ interface RecommendationService {
 
     fun getRecommendations(userId: String, itemType: ItemType, number: Short): RecommendationsDTO
 
-    fun checkRecommendations(recommendations: Collection<Recommendation>)
+    fun checkRecommendations(recommendations: RecommendationsDTO)
 
     fun computeRecommendations()
 }

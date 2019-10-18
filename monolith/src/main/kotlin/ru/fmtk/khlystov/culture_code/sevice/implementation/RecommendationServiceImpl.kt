@@ -3,7 +3,6 @@ package ru.fmtk.khlystov.culture_code.sevice.implementation
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.recomendations.Recommendation
 import ru.fmtk.khlystov.culture_code.repository.recommendations.RecommendationsRepository
@@ -31,8 +30,11 @@ class RecommendationServiceImpl(
                         .map(Recommendation::itemId).toSet())
     }
 
-    override fun checkRecommendations(recommendations: Collection<Recommendation>) {
-        //recommendationsRepository.setRecommendationsAsChecked(recommendations)
+    override fun checkRecommendations(recommendations: RecommendationsDTO) {
+        recommendationsRepository.setRecommendationsAsChecked(
+                recommendations.itemsId.map { itemId ->
+                    Recommendation(null, recommendations.userId, recommendations.itemType, itemId, true)
+                })
     }
 
     override fun computeRecommendations() {
@@ -47,17 +49,18 @@ class RecommendationServiceImpl(
                         if (neighbours.size < RECOMMENDATION_SERVICE__NEIGHBOURS_TO_COMPUTE) {
                             // If user has less than 5 neighbours, take first 5 best items
                             // by average rating.
-                            ratingService.getAVGRatingsForItemType(itemType, user.id?:"",
+                            ratingService.getAVGRatingsForItemType(itemType, user.id ?: "",
                                     RECOMMENDATION_SERVICE__RECOMMENDATIONS_NUMBER)
                         } else {
                             // Иначе, по этим соседям усредняем оценки для позиций, которые пользователь еще не оценил,
                             // отбираем первые 10 максимальных, и записываем в таблицу рекомендаций.
-                            ratingService.getAVGRatingsByUsersIds(itemType, user.id?:"", neighbours,
+                            ratingService.getAVGRatingsByUsersIds(itemType, user.id ?: "", neighbours,
                                     RECOMMENDATION_SERVICE__RECOMMENDATIONS_NUMBER)
                         }
                 recommendationsRepository.saveAll(
                         recommendationsToSave.map { itemAvgRating ->
-                            Recommendation(null, user.id ?: "", itemType, itemAvgRating.itemId) })
+                            Recommendation(null, user.id ?: "", itemType, itemAvgRating.itemId)
+                        })
             }
         }
     }
