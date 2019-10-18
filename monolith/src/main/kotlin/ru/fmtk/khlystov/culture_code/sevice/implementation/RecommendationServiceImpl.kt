@@ -26,7 +26,7 @@ class RecommendationServiceImpl(
     override fun getRecommendations(userId: String, itemType: ItemType, number: Short): RecommendationsDTO {
         val pageable = PageRequest.of(0, 5, Sort.by("rating").descending())
         return RecommendationsDTO(userId, itemType,
-                recommendationsRepository.findAllByUserIdAndItemType(userId, itemType, pageable)
+                recommendationsRepository.findAllByUserIdAndItemTypeAndCheckedFalse(userId, itemType, pageable)
                         .map(Recommendation::itemId).toSet())
     }
 

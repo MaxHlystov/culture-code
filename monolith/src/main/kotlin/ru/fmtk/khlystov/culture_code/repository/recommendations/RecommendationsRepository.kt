@@ -9,7 +9,7 @@ import ru.fmtk.khlystov.culture_code.model.recomendations.Recommendation
 @RepositoryRestResource(exported = false)
 interface RecommendationsRepository : MongoRepository<Recommendation, String>, RecommendationsRepositoryCustom {
 
-    fun findAllByUserIdAndItemType(userId: String, itemType: ItemType, pageable: Pageable): List<Recommendation>
+    fun findAllByUserIdAndItemTypeAndCheckedFalse(userId: String, itemType: ItemType, pageable: Pageable): List<Recommendation>
 }
 
 interface RecommendationsRepositoryCustom {
