@@ -53,7 +53,7 @@ internal class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
                     ItemAvgRating(idPair.first, idPair.second,
                             ratingItems.map(UserItemRating::rating).average().toFloat())
                 }
-                .sortedBy(ItemAvgRating::avgRating)
+                .sortedByDescending(ItemAvgRating::avgRating)
         val avg = userItemRatingRepository.getAVGRatingsForItemType(
                 ItemType.BOOK, excludeUserId, allRatings.size.toLong())
         assertTrue(avg.asSequence().zipWithNext()
@@ -67,15 +67,16 @@ internal class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
     @Test
     fun getAVGRatingsByUsersIds() {
         val allRatings = userItemRatingRepository.findAllByItemType(ItemType.BOOK)
-        val allUsers = allRatings.distinctBy(UserItemRating::userId).map(UserItemRating::userId)
-        val excludeUserId = allUsers.firstOrNull() ?: ""
+        val allUsersIds = allRatings.distinctBy(UserItemRating::userId).map(UserItemRating::userId)
+        val excludeUserId = allUsersIds.firstOrNull() ?: ""
         val excludeItemsIds = allRatings
                 .filter { userItemRating -> userItemRating.userId == excludeUserId }
                 .map { userItemRating -> userItemRating.itemId }.toSet()
-        val usersIds = allUsers.filter { id -> id != excludeUserId }
+        val rightUsersId = allUsersIds.asSequence()
+                .filter { id -> id != excludeUserId }.take(1).toSet()
         val computedAvg = allRatings
                 .filter { ratingItem ->
-                    !excludeItemsIds.contains(ratingItem.itemId) && usersIds.contains(ratingItem.userId)
+                    !excludeItemsIds.contains(ratingItem.itemId) && rightUsersId.contains(ratingItem.userId)
                 }
                 .groupBy { ratingItem -> ratingItem.itemType to ratingItem.itemId }
                 .map { (idPair, ratingItems) ->
@@ -84,7 +85,7 @@ internal class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
                 }
                 .sortedByDescending(ItemAvgRating::avgRating)
         val avg = userItemRatingRepository.getAVGRatingsByUsersIds(
-                ItemType.BOOK, excludeUserId, usersIds, allRatings.size.toLong())
+                ItemType.BOOK, excludeUserId, rightUsersId, allRatings.size.toLong())
         assertTrue(avg.asSequence().zipWithNext()
                 .all { (first, second) -> first.avgRating >= second.avgRating },
                 "Ratings has to be ordered in decrease way.")

@@ -67,7 +67,8 @@ open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate
                 group().push("itemId").`as`("itemsIdxToExclude"),
                 lookup("Ratings_UserItemRating", "string", "string", "items"),
                 unwind("\$items"),
-                match(Criteria.where("items.itemType").`is`(itemType)),
+                match(Criteria.where("items.itemType").`is`(itemType)
+                        .and("items.userId").`in`(usersIds)),
                 project().and("items._id").`as`("_id")
                         .and("items.rating").`as`("rating")
                         .and("items.itemType").`as`("itemType")
