@@ -1,7 +1,8 @@
 # Culture code
 Prototype of universal recomendation system
 
-You can see REST by [HAL browser](http://localhost:8080/browser/index.html#/)
+You can see REST by [HAL browser](http://localhost:8080/browser/index.html#/).
+Recommendations rest-controller accessed by [/recommendations](http://localhost:8080/recommendations/) path.
 
 #### Users by default:
 - Admin with password 111111
