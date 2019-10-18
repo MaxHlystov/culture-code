@@ -88,9 +88,9 @@ open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate
         return groupResults.mappedResults
     }
 
-    override fun getClosenessByRating(userId: String, limit: Long): List<TwoUsersCloseness> {
+    override fun getClosenessByRating(firstUserId: String, limit: Long): List<TwoUsersCloseness> {
         val aggregation = newAggregation(UserItemRating::class.java,
-                match(Criteria.where("userId").`is`(userId)
+                match(Criteria.where("userId").`is`(firstUserId)
                         .and("rating").gt(0.0)),
                 lookup("Ratings_UserItemRating", "itemId", "itemId", "items"),
                 unwind("\$items"),

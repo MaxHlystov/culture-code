@@ -11,11 +11,11 @@ import ru.fmtk.khlystov.culture_code.sevice.dto.RecommendationsDTO
 
 
 @RepositoryRestController
-@RequestMapping(value = "/recommendations")
+@RequestMapping(value = ["/recommendations"])
 class RecommendationController(private val recommendationService: RecommendationService)
     : ResourceProcessor<RepositoryLinksResource> {
 
-    @GetMapping(value = "/userid/{userId}/itemtype/{itemType}/limit/{limit}")
+    @GetMapping(value = ["/userid/{userId}/itemtype/{itemType}/limit/{limit}"])
     fun getRecommendationsForUserAndItemType(@PathVariable userId: String,
                                              @PathVariable itemType: ItemType,
                                              @PathVariable(required = false) limit: Short = 5)
@@ -23,7 +23,7 @@ class RecommendationController(private val recommendationService: Recommendation
         return recommendationService.getRecommendations(userId, itemType, limit)
     }
 
-    @PutMapping(value = "/userid/{userId}/itemtype/{itemType}/itemid/{itemId}")
+    @PutMapping(value = ["/userid/{userId}/itemtype/{itemType}/itemid/{itemId}"])
     fun checkRecommendation(@PathVariable userId: String,
                             @PathVariable itemType: ItemType,
                             @PathVariable itemId: String) {
@@ -32,7 +32,7 @@ class RecommendationController(private val recommendationService: Recommendation
         )
     }
 
-    @PostMapping(value = "/compute")
+    @PostMapping(value = ["/compute"])
     fun compute() {
         recommendationService.computeRecommendations()
     }
