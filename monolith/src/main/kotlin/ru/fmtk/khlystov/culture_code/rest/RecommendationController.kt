@@ -18,7 +18,7 @@ class RecommendationController(
         return recommendationService.getRecommendations(userId, itemType, limit)
     }
 
-    @PostMapping(value = "/userid/{userId}/itemtype/{itemType}/itemid/{itemId}")
+    @PutMapping(value = "/userid/{userId}/itemtype/{itemType}/itemid/{itemId}")
     fun checkRecommendation(@PathVariable userId: String,
                             @PathVariable itemType: ItemType,
                             @PathVariable itemId: String) {
