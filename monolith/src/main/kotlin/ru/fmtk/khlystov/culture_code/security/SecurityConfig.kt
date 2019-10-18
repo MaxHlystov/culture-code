@@ -27,7 +27,8 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
 
-                .authorizeRequests().antMatchers("/users/**").hasAuthority(Roles.Admin.role)
+                .authorizeRequests().antMatchers(
+                        "/users/**", "recommendations/compute/**").hasAuthority(Roles.Admin.role)
                 .and()
 
                 .authorizeRequests().antMatchers("/", "/favicon.ico").permitAll()
