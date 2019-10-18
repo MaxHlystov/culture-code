@@ -3,8 +3,8 @@ package ru.fmtk.khlystov.culture_code.repository.ratings
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.FindAndModifyOptions
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.aggregation.Aggregation.*
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
@@ -29,64 +29,68 @@ open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate
     }
 
     /*[{
-        $match: {
-            userId: "5da795dc47c88f3be8b0816f",
-            itemType: "BOOK"
-        }
-    }, {
-        $group: {
-            _id: 0,
-            itemsIdxToExclude: {
-            $push: "$itemId"
-        }
-        }
-    }, {
-        $lookup: {
-            from: 'Ratings_UserItemRating',
-            localField: 'string',
-            foreignField: 'string',
-            as: 'items'
-        }
-    }, {
-        $unwind: "$items"
-    }, {
-        $project: {
-            itemId: "$items.itemId",
-            rating: "$items.rating",
-            mid: {
-            $in: ["$items.itemId", "$itemsIdxToExclude"]
-        },
-
-        }
-    }, {
-        $match: {
-            mid: {
-            $eq: false
-        },
-            rating: {
-            $gt: 0
-        }
-        }
-    }, {
-        $group: {
-            _id: "$itemId",
-            rating: {
-            $avg: "$rating"
-        }
-        }
-    }, {
-        $sort: {
-            rating: -1
-        }
-    }, {
-        $limit: 5
-    }]*/
+            $match: {
+                userId: '5da8825590e4e91c98ba49a1',
+                itemType: 'BOOK'
+            }
+        }, {
+            $group: {
+                _id: 0,
+                itemsIdxToExclude: {
+                    $push: '$itemId'
+                }
+            }
+        }, {
+            $lookup: {
+                from: 'Ratings_UserItemRating',
+                localField: 'string',
+                foreignField: 'string',
+                as: 'items'
+            }
+        }, {
+            $unwind: '$items'
+        }, {
+            $project: {
+                _id: '$items._id',
+                itemId: '$items.itemId',
+                rating: '$items.rating',
+                mid: {
+                    $in: [
+                        '$items.itemId',
+                        '$itemsIdxToExclude'
+                    ]
+                }
+            }
+        }, {
+            $match: {
+                mid: {
+                    $eq: false
+                },
+                rating: {
+                    $gt: 0
+                }
+            }
+        }, {
+            $group: {
+                _id: '$itemId',
+                rating: {
+                    $avg: '$rating'
+                }
+            }
+        }, {
+            $sort: {
+                rating: -1
+            }
+        }, {
+            $limit: 5
+        }]*/
     override fun getAVGRatingsForItemType(itemType: ItemType,
                                           excludeUserId: String,
                                           limit: Long): List<ItemAvgRating> {
         val aggregation = newAggregation(UserItemRating::class.java,
                 match(Criteria.where("ItemType").`is`(itemType)
-                        .and("rating").gt(0.0)),
+                        .and("rating").gt(0.0)
+                        .and("userId").ne(excludeUserId)),
                 group("itemType", "itemId").avg("rating").`as`("avgRating"),
                 project("avgRating").and("_id.itemType").`as`("itemType")
                         .and("_id.itemId").`as`("itemId"),
@@ -102,13 +106,24 @@ open class UserItemRatingRepositoryImpl(private val mongoTemplate: MongoTemplate
                                          usersIds: Collection<String>,
                                          limit: Long): List<ItemAvgRating> {
         val aggregation = newAggregation(UserItemRating::class.java,
-                match(Criteria.where("ItemType").`is`(itemType)
-                        .and("rating").gt(0.0)),
-                group("itemType", "itemId").avg("rating").`as`("avgRating"),
-                project("avgRating").and("_id.itemType").`as`("itemType")
-                        .and("_id.itemId").`as`("itemId"),
-                lookup("Ratings_UserItemRating", "itemId", "itemId", "items"),
+                match(Criteria.where("userId").`is`(excludeUserId)
+                        .and("ItemType").`is`(itemType)),
+                group().push("itemId").`as`("itemsIdxToExclude"),
+                lookup("Ratings_UserItemRating", "string", "string", "items"),
                 unwind("\$items"),
+                match(Criteria.where("items.itemType").`is`(itemType)),
+                project().and("items._id").`as`("_id")
+                        .and("items.rating").`as`("rating")
+                        .and("items.itemType").`as`("itemType")
+                        .and("items.itemId").`as`("itemId")
+                        .and(ArrayOperators.In.arrayOf("\$itemsIdxToExclude").containsValue("\$items.itemId")).`as`("mid"),
+                match(Criteria.where("mid").`is`(false)
+                        .and("rating").gt(0.0)),
+                group("itemId", "itemType").avg("rating").`as`("avgRating"),
+                project("avgRating")
+                        .andExclude("_id")
+                        .and("_id.itemId").`as`("itemId")
+                        .and("_id.itemType").`as`("itemType"),
                 sort(Sort.Direction.DESC, "avgRating"),
                 limit(limit)
         )
