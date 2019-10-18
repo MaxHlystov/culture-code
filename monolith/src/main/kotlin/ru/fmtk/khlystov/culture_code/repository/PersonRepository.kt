@@ -5,7 +5,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import org.springframework.stereotype.Repository
 import ru.fmtk.khlystov.culture_code.model.Person
 
-@RepositoryRestResource(path = "Persons")
+@RepositoryRestResource(path = "persons")
 @Repository
 interface PersonRepository : PagingAndSortingRepository<Person, String> {
 }
