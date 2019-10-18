@@ -39,7 +39,7 @@ internal class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
         initTestMongoDBData.run(mongoTemplate)
     }
 
-    @DisplayName(" return average ratings by types of items except for user items.")
+    @DisplayName(" return average ratings for items of the type and except the user items.")
     @Test
     fun getAVGRatingsForItemType() {
         val allRatings = userItemRatingRepository.findAllByItemType(ItemType.BOOK)
@@ -63,7 +63,7 @@ internal class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
         log.info("Number of average ratings is ${avg.size}")
     }
 
-    @DisplayName(" return average ratings by types of items except for user items.")
+    @DisplayName(" return average ratings for items of the type and rated by the users and except the user items.")
     @Test
     fun getAVGRatingsByUsersIds() {
         val allRatings = userItemRatingRepository.findAllByItemType(ItemType.BOOK)
