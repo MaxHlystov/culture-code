@@ -1,6 +1,7 @@
 package ru.fmtk.khlystov.culture_code.model
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 import kotlin.streams.toList
@@ -8,7 +9,7 @@ import kotlin.streams.toList
 @Document(collection = "Main_Users")
 data class User(@Id var id: String?,
                 val name: String,
-                val email: String = "",
+                @Indexed val email: String = "",
                 val password: String = "",
                 val accountNonExpired: Boolean = true,
                 val accountNonLocked: Boolean = true,
