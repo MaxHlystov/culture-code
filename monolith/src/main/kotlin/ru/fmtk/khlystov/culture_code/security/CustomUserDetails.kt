@@ -2,10 +2,25 @@ package ru.fmtk.khlystov.culture_code.security
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.oauth2.core.user.OAuth2User
 import ru.fmtk.khlystov.culture_code.model.User
-import ru.fmtk.khlystov.culture_code.security.Authority
 
-open class CustomUserDetails(val user: User) : UserDetails {
+open class CustomUserDetails(val user: User,
+                             private var attributes: Map<String, Any> = HashMap()
+) : OAuth2User, UserDetails {
+
+    fun getId(): String? {
+        return user.id
+    }
+
+    override fun getName(): String {
+        return user.id.toString()
+    }
+
+    fun getEmail(): String {
+        return user.email
+    }
+
     override fun getAuthorities(): Collection<GrantedAuthority> {
         return user.roles.asSequence().map(::Authority).toList()
     }
@@ -33,4 +48,13 @@ open class CustomUserDetails(val user: User) : UserDetails {
     override fun isAccountNonLocked(): Boolean {
         return user.accountNonLocked
     }
+
+    override fun getAttributes(): Map<String, Any> {
+        return attributes
+    }
+
+    fun setAttributes(attributes: Map<String, Any>) {
+        this.attributes = attributes
+    }
+
 }

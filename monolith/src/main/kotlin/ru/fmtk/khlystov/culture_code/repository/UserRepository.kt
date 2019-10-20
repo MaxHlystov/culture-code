@@ -8,4 +8,8 @@ import java.util.*
 @Repository
 interface UserRepository : PagingAndSortingRepository<User, String> {
     fun findByName(name: String): Optional<User>
+
+    fun findByEmail(email: String): Optional<User>
+
+    fun existsByEmail(email: String): Boolean
 }

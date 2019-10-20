@@ -5,6 +5,31 @@ spring:
       host: ${culturecode.db.host:localhost}
       port: ${culturecode.db.port:27017}
       database: ${culturecode.db.database:culture-code}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 85821782974-b5eon2osub91p640rtmadna3n8qp93e0.apps.googleusercontent.com
+            clientSecret: RW-bRHFxDtWrZiZRIUK_IZnA
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 864000000
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
 
 logging:
   file: "tmp_log.log"
