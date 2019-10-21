@@ -5,8 +5,10 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @ConfigurationProperties("app")
-data class SecurityAppProperties(val auth: Auth = Auth(),
-                            val oauth2: OAuth2 = OAuth2()) {
+class SecurityAppProperties {
+
+    var auth: Auth = Auth()
+    var oauth2: OAuth2 = OAuth2()
 
     data class Auth(var tokenSecret: String? = null,
                var tokenExpirationMsec: Long = 0)

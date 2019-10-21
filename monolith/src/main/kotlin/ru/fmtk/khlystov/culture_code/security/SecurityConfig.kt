@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import ru.fmtk.khlystov.culture_code.security.oauth2.CustomOAuth2UserService
 import ru.fmtk.khlystov.culture_code.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository
 import ru.fmtk.khlystov.culture_code.security.oauth2.OAuth2AuthenticationFailureHandler
@@ -66,21 +67,17 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     private lateinit var httpCookieOAuth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository
 
     override fun configure(http: HttpSecurity) {
-        http.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.cors()
+                 .and()
+
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
 
+                .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
-
                 .exceptionHandling().authenticationEntryPoint(RestAuthenticationEntryPoint())
-                .and()
-
-                .authorizeRequests()
-                    .antMatchers(
-                        "/users/**",
-                        "recommendations/compute/**")
-                    .hasAuthority(Roles.Admin.role)
                 .and()
 
                 .authorizeRequests()
@@ -101,6 +98,13 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                     .authenticated()
                 .and()
 
+                .authorizeRequests()
+                    .antMatchers(
+                        "/users/**",
+                        "recommendations/compute/**")
+                    .hasAuthority(Roles.Admin.role)
+                .and()
+
                 .oauth2Login()
                     .authorizationEndpoint()
                     .baseUri("/oauth2/authorize")
@@ -115,8 +119,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                     .userService(customOAuth2UserService)
                 .and()
 
-                .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler)
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler)
+        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 
 

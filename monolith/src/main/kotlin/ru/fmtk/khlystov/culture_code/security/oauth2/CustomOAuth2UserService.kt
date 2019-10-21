@@ -38,7 +38,7 @@ class CustomOAuth2UserService(private val userRepository: UserRepository) : Defa
         }
         val userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail())
         var user: User = userOptional.map { user ->
-            if (user.provider != AuthProvider.valueOf(oAuth2UserRequest.clientRegistration.registrationId)) {
+            if (user.provider != AuthProvider.valueOf(oAuth2UserRequest.clientRegistration.registrationId.toUpperCase())) {
                 throw OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
                         oAuth2UserRequest.clientRegistration.registrationId + " account. Please use your " +
                         user.provider.toString() + " account to login.")
@@ -54,7 +54,7 @@ class CustomOAuth2UserService(private val userRepository: UserRepository) : Defa
                 null,
                 name = oAuth2UserInfo.getName(),
                 email = oAuth2UserInfo.getEmail(),
-                provider = AuthProvider.valueOf(oAuth2UserRequest.clientRegistration.registrationId),
+                provider = AuthProvider.valueOf(oAuth2UserRequest.clientRegistration.registrationId.toUpperCase()),
                 providerId = oAuth2UserInfo.getId(),
                 imageUrl = oAuth2UserInfo.getImageUrl())
         return userRepository.save(user)
