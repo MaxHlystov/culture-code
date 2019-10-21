@@ -11,6 +11,7 @@ import ru.fmtk.khlystov.culture_code.model.User
 import ru.fmtk.khlystov.culture_code.repository.UserRepository
 import ru.fmtk.khlystov.culture_code.security.AuthProvider
 import ru.fmtk.khlystov.culture_code.security.CustomUserDetails
+import ru.fmtk.khlystov.culture_code.security.Roles
 import ru.fmtk.khlystov.culture_code.security.exception.OAuth2AuthenticationProcessingException
 import ru.fmtk.khlystov.culture_code.security.oauth2.user.OAuth2UserInfo
 import ru.fmtk.khlystov.culture_code.security.oauth2.user.getOAuth2UserInfo
@@ -56,7 +57,8 @@ class CustomOAuth2UserService(private val userRepository: UserRepository) : Defa
                 email = oAuth2UserInfo.getEmail(),
                 provider = AuthProvider.valueOf(oAuth2UserRequest.clientRegistration.registrationId.toUpperCase()),
                 providerId = oAuth2UserInfo.getId(),
-                imageUrl = oAuth2UserInfo.getImageUrl())
+                imageUrl = oAuth2UserInfo.getImageUrl(),
+                roles = setOf(Roles.User.role))
         return userRepository.save(user)
     }
 
