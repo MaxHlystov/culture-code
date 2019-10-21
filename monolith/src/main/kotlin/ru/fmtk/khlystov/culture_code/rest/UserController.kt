@@ -9,6 +9,7 @@ import ru.fmtk.khlystov.culture_code.model.User
 import ru.fmtk.khlystov.culture_code.repository.UserRepository
 import ru.fmtk.khlystov.culture_code.security.CurrentUser
 import ru.fmtk.khlystov.culture_code.security.CustomUserDetails
+import ru.fmtk.khlystov.culture_code.security.exception.ResourceNotFoundException
 import java.security.InvalidParameterException
 
 @RestController
@@ -22,6 +23,6 @@ class UserController {
     fun getCurrentUser(@CurrentUser customUserDetails: CustomUserDetails): User {
         val userId = customUserDetails.getId() ?: throw InvalidParameterException("User id is null")
         return userRepository.findById(userId)
-                .orElseThrow { BadCredentialsException("Not found user with id ${customUserDetails.getId()}") }
+                .orElseThrow { ResourceNotFoundException("User", "id", userId) }
     }
 }

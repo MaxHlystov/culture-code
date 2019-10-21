@@ -20,6 +20,7 @@ import ru.fmtk.khlystov.culture_code.rest.dto.LoginRequest
 import ru.fmtk.khlystov.culture_code.rest.dto.SignUpRequest
 import ru.fmtk.khlystov.culture_code.security.AuthProvider
 import ru.fmtk.khlystov.culture_code.security.TokenProvider
+import ru.fmtk.khlystov.culture_code.security.exception.BadRequestException
 import javax.validation.Valid
 
 @RestController
@@ -52,7 +53,7 @@ class AuthController {
     @PostMapping("/signup")
     fun registerUser(@Valid @RequestBody signUpRequest: SignUpRequest): ResponseEntity<*> {
         if (userRepository.existsByEmail(signUpRequest.email)) {
-            throw BadCredentialsException("Email address already in use.")
+            throw BadRequestException("Email address already in use.")
         }
         val user = User(null,
                 signUpRequest.name,

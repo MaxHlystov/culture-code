@@ -1,12 +1,12 @@
 package ru.fmtk.khlystov.culture_code.security.oauth2
 
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.stereotype.Component
 import org.springframework.web.util.UriComponentsBuilder
 import ru.fmtk.khlystov.culture_code.security.SecurityAppProperties
 import ru.fmtk.khlystov.culture_code.security.TokenProvider
+import ru.fmtk.khlystov.culture_code.security.exception.BadRequestException
 import ru.fmtk.khlystov.culture_code.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.Companion.REDIRECT_URI_PARAM_COOKIE_NAME
 import ru.fmtk.khlystov.culture_code.security.utils.getCookie
 import java.net.URI
@@ -42,7 +42,7 @@ class OAuth2AuthenticationSuccessHandler(
                 .map(Cookie::getValue)
                 .map { redirectUri ->
                     if (!isAuthorizedRedirectUri(redirectUri)) {
-                        throw BadCredentialsException(
+                        throw BadRequestException(
                                 "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication")
                     }
                     redirectUri
