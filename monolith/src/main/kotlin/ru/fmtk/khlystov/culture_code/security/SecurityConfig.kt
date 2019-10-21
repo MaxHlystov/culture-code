@@ -81,6 +81,11 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .and()
 
                 .authorizeRequests()
+                    .antMatchers("recommendations/compute/**")
+                    .hasAuthority(Roles.Admin.role)
+                .and()
+
+                .authorizeRequests()
                     .antMatchers("/",
                             "/error",
                             "/favicon.ico",
@@ -98,13 +103,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                     .authenticated()
                 .and()
 
-                .authorizeRequests()
-                    .antMatchers(
-                        "/users/**",
-                        "recommendations/compute/**")
-                    .hasAuthority(Roles.Admin.role)
-                .and()
-
                 .oauth2Login()
                     .authorizationEndpoint()
                     .baseUri("/oauth2/authorize")
@@ -119,8 +117,8 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                     .userService(customOAuth2UserService)
                 .and()
 
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
-                    .failureHandler(oAuth2AuthenticationFailureHandler)
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler)
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 
