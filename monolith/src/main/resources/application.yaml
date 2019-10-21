@@ -11,14 +11,14 @@ spring:
         registration:
           google:
             clientId: 85821782974-b5eon2osub91p640rtmadna3n8qp93e0.apps.googleusercontent.com
-            clientSecret: RW-bRHFxDtWrZiZRIUK_IZnA
+            clientSecret: {googleClientSecret}
             redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           github:
             clientId: 8b528c3e62f3133dc0e1
-            clientSecret: 0a20fcb0f2098bfd046071601ff6dce05b6eb0e7
+            clientSecret: {githubClientSecret}
             redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - user:email
@@ -26,7 +26,7 @@ spring:
 
 app:
   auth:
-    tokenSecret: BC96B1A455E3E582FB3F9BD398AC6573
+    tokenSecret: {tokenSecret}
     tokenExpirationMsec: 864000000
   oauth2:
     # After successfully authenticating with the OAuth2 Provider,
