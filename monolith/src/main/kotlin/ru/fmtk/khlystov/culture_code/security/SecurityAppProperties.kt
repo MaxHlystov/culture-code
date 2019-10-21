@@ -4,7 +4,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 import java.util.*
 
-@Component
 @ConfigurationProperties("app")
 data class SecurityAppProperties(val auth: Auth = Auth(),
                             val oauth2: OAuth2 = OAuth2()) {
@@ -12,7 +11,7 @@ data class SecurityAppProperties(val auth: Auth = Auth(),
     data class Auth(var tokenSecret: String? = null,
                var tokenExpirationMsec: Long = 0)
 
-    data class OAuth2(private var authorizedRedirectUris: List<String> = ArrayList()) {
+    data class OAuth2(var authorizedRedirectUris: List<String> = ArrayList()) {
 
         fun authorizedRedirectUris(authorizedRedirectUris: List<String>): OAuth2 {
             this.authorizedRedirectUris = authorizedRedirectUris

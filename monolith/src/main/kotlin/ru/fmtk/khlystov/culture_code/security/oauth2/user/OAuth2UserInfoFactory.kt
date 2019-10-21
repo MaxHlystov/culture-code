@@ -6,7 +6,10 @@ import ru.fmtk.khlystov.culture_code.security.exception.OAuth2AuthenticationProc
 fun getOAuth2UserInfo(registrationId: String, attributes: Map<String, Any>): OAuth2UserInfo {
     return if (registrationId.equals(AuthProvider.GOOGLE.toString(), ignoreCase = true)) {
         GoogleOAuth2UserInfo(attributes)
-    } else {
+    } else if (registrationId.equals(AuthProvider.GITHUB.toString(), ignoreCase = true)) run {
+        return GithubOAuth2UserInfo(attributes)
+    }
+    else {
         throw OAuth2AuthenticationProcessingException("Login with $registrationId is not supported yet.")
     }
 }
