@@ -43,7 +43,7 @@ class AuthController {
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest): ResponseEntity<*> {
 
         val authentication = authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(loginRequest.email, loginRequest.password)
+                UsernamePasswordAuthenticationToken(loginRequest.name, loginRequest.password)
         )
         SecurityContextHolder.getContext().authentication = authentication
         val token = tokenProvider.createToken(authentication)
