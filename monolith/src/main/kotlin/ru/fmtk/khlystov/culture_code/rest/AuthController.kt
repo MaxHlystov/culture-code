@@ -19,6 +19,7 @@ import ru.fmtk.khlystov.culture_code.rest.dto.AuthResponse
 import ru.fmtk.khlystov.culture_code.rest.dto.LoginRequest
 import ru.fmtk.khlystov.culture_code.rest.dto.SignUpRequest
 import ru.fmtk.khlystov.culture_code.security.AuthProvider
+import ru.fmtk.khlystov.culture_code.security.Roles
 import ru.fmtk.khlystov.culture_code.security.TokenProvider
 import ru.fmtk.khlystov.culture_code.security.exception.BadRequestException
 import javax.validation.Valid
@@ -41,13 +42,11 @@ class AuthController {
 
     @PostMapping("/login")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest): ResponseEntity<*> {
-
         val authentication = authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(loginRequest.name, loginRequest.password)
-        )
+                UsernamePasswordAuthenticationToken(loginRequest.name, loginRequest.password))
         SecurityContextHolder.getContext().authentication = authentication
         val token = tokenProvider.createToken(authentication)
-        return ResponseEntity.ok<Any>(AuthResponse(token))
+        return ResponseEntity.ok<AuthResponse>(AuthResponse(token))
     }
 
     @PostMapping("/signup")
@@ -59,7 +58,8 @@ class AuthController {
                 signUpRequest.name,
                 signUpRequest.email,
                 password = passwordEncoder.encode(signUpRequest.password),
-                provider = AuthProvider.LOCAL)
+                provider = AuthProvider.LOCAL,
+                roles = setOf(Roles.User.role))
         val result = userRepository.save(user)
         val location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/user/me")

@@ -7,6 +7,9 @@ fun getOAuth2UserInfo(registrationId: String, attributes: Map<String, Any>): OAu
     return if (registrationId.equals(AuthProvider.GOOGLE.toString(), ignoreCase = true)) {
         GoogleOAuth2UserInfo(attributes)
     } else if (registrationId.equals(AuthProvider.GITHUB.toString(), ignoreCase = true)) run {
+        if(!attributes.containsKey("email")) {
+            throw OAuth2AuthenticationProcessingException("Github login without public email is not supported.")
+        }
         return GithubOAuth2UserInfo(attributes)
     }
     else {

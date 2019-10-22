@@ -41,6 +41,9 @@ app:
 logging:
   file: "tmp_log.log"
   level:
+    org:
+      springframework:
+        security: DEBUG
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 
 management:

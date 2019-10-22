@@ -6,14 +6,14 @@ class GithubOAuth2UserInfo(attributes: Map<String, Any>) : OAuth2UserInfo(attrib
     }
 
     override fun getName(): String {
-        return attributes["name"] as String
+        return (attributes["name"] ?: "") as String
     }
 
     override fun getEmail(): String {
-        return attributes["email"] as String
+        return (attributes["email"] ?: "") as String
     }
 
     override fun getImageUrl(): String {
-        return attributes["avatar_url"] as String
+        return (attributes["avatar_url"] ?: "") as String
     }
 }
