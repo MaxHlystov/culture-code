@@ -88,14 +88,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .authorizeRequests()
                     .antMatchers("/",
                             "/error",
-                            "/favicon.ico",
-                            "/**/*.png",
-                            "/**/*.gif",
-                            "/**/*.svg",
-                            "/**/*.jpg",
-                            "/**/*.html",
-                            "/**/*.css",
-                            "/**/*.js")
+                            "/static/**")
                         .permitAll()
                     .antMatchers("/auth/**", "/oauth2/**")
                         .permitAll()
