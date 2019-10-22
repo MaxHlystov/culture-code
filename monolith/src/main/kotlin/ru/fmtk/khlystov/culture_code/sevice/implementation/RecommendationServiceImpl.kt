@@ -41,7 +41,7 @@ class RecommendationServiceImpl(
         val users = usersService.findAllSortedById()
         for (user in users) {
             // 1. Find 5 neighbours for the user.
-            val neighbours = ratingService.getClosenessByRating(user.id ?: "",
+            val neighbours = ratingService.getClosenessByRating(user.id,
                     RECOMMENDATION_SERVICE__NEIGHBOURS_TO_COMPUTE)
                     .mapNotNull { twoUsersCloseness -> twoUsersCloseness.secondUserId }
             for (itemType in ItemType.values()) {
@@ -49,17 +49,17 @@ class RecommendationServiceImpl(
                         if (neighbours.size < RECOMMENDATION_SERVICE__NEIGHBOURS_TO_COMPUTE) {
                             // If user has less than 5 neighbours, take first 5 best items
                             // by average rating.
-                            ratingService.getAVGRatingsForItemType(itemType, user.id ?: "",
+                            ratingService.getAVGRatingsForItemType(itemType, user.id,
                                     RECOMMENDATION_SERVICE__RECOMMENDATIONS_NUMBER)
                         } else {
                             // Иначе, по этим соседям усредняем оценки для позиций, которые пользователь еще не оценил,
                             // отбираем первые 10 максимальных, и записываем в таблицу рекомендаций.
-                            ratingService.getAVGRatingsByUsersIds(itemType, user.id ?: "", neighbours,
+                            ratingService.getAVGRatingsByUsersIds(itemType, user.id, neighbours,
                                     RECOMMENDATION_SERVICE__RECOMMENDATIONS_NUMBER)
                         }
                 recommendationsRepository.saveAll(
                         recommendationsToSave.map { itemAvgRating ->
-                            Recommendation(null, user.id ?: "", itemType, itemAvgRating.itemId)
+                            Recommendation(null, user.id, itemType, itemAvgRating.itemId)
                         })
             }
         }
