@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse
 class TokenAuthenticationFilter : OncePerRequestFilter() {
     companion object {
         private val logger = LoggerFactory.getLogger(TokenAuthenticationFilter::class.java)
+        private const val TOKEN_AUTHENTICATION_FILTER__TOKEN_PREFIX = "Bearer "
     }
 
     @Autowired
@@ -45,8 +46,9 @@ class TokenAuthenticationFilter : OncePerRequestFilter() {
 
     private fun getJwtFromRequest(request: HttpServletRequest): String? {
         val bearerToken = request.getHeader("Authorization")
-        return if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            bearerToken.substring(7, bearerToken.length)
+        return if (StringUtils.hasText(bearerToken)
+                && bearerToken.startsWith(TOKEN_AUTHENTICATION_FILTER__TOKEN_PREFIX)) {
+            bearerToken.removePrefix(TOKEN_AUTHENTICATION_FILTER__TOKEN_PREFIX)
         } else null
     }
 }
