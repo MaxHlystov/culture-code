@@ -1,0 +1,62 @@
+spring:
+  application.name: "culture-code"
+  data:
+    mongodb:
+      host: ${culturecode.db.host:localhost}
+      port: ${culturecode.db.port:27017}
+      database: ${culturecode.db.database:culture-code}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 85821782974-b5eon2osub91p640rtmadna3n8qp93e0.apps.googleusercontent.com
+            clientSecret: ${GOOGLE_CLIENT_SECRET}
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          github:
+            clientId: 8b528c3e62f3133dc0e1
+            clientSecret: ${GITHUB_CLIENT_SECRET}
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - user
+
+app:
+  auth:
+    tokenSecret: ${APP_TOKEN_SECRET}
+    tokenExpirationMsec: 864000000
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
+
+logging:
+  file: "tmp_log.log"
+  level:
+    org:
+      springframework:
+        security: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    app:
+      name: "culture-code"
+      description: "Universal recommendation system"
+      version: "0.0.1"
+      encoding: UTF-8

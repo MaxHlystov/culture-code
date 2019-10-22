@@ -2,14 +2,13 @@
 *.iws
 *.iml
 *.ipr
-/out/
-/monolith/out/
+out/
 .idea/
 
 ### Gradle ###
 .gradletasknamecache
 .gradle
-gradle/
+/gradle
 build/
 bin/
 gradlew
@@ -38,6 +37,6 @@ gradlew.bat
 .vscode/ 
 
 ### Another files ###
-*.log
+.log
 *.gz
 HELP.md
