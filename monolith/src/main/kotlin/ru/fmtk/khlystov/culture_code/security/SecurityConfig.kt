@@ -82,7 +82,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
                 .authorizeRequests()
                     .antMatchers("recommendations/compute/**")
-                    .hasAuthority(Roles.Admin.role)
+                    .hasAuthority(Roles.ADMIN.role)
                 .and()
 
                 .authorizeRequests()

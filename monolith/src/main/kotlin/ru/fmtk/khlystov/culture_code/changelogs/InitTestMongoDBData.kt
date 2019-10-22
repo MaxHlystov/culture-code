@@ -25,7 +25,7 @@ class InitTestMongoDBData {
 
     private fun setUsersForTests(template: MongoTemplate) {
         val password = passwordEncoder.encode("111111")
-        val userRoles = setOf(Roles.User.toString())
+        val userRoles = setOf(Roles.USER.toString())
         val users = (1..10).map { idx ->
             User(null, "Test$idx", password = password, roles = userRoles)
         }.toList()

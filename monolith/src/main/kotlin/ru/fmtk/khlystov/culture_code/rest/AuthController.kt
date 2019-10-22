@@ -3,7 +3,6 @@ package ru.fmtk.khlystov.culture_code.rest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -59,7 +58,7 @@ class AuthController {
                 signUpRequest.email,
                 password = passwordEncoder.encode(signUpRequest.password),
                 provider = AuthProvider.LOCAL,
-                roles = setOf(Roles.User.role))
+                roles = setOf(Roles.USER.role))
         val result = userRepository.save(user)
         val location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/user/me")

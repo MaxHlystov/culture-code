@@ -4,15 +4,12 @@ import com.github.cloudyrock.mongock.ChangeLog
 import com.github.cloudyrock.mongock.ChangeSet
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Bean
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.BasicQuery
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import ru.fmtk.khlystov.culture_code.model.User
 import ru.fmtk.khlystov.culture_code.security.Roles
-import java.lang.management.BufferPoolMXBean
 
 @ChangeLog(order = "002")
 class SetDefaultUsersIfEmptyMongoDBChangeLog {
@@ -22,7 +19,7 @@ class SetDefaultUsersIfEmptyMongoDBChangeLog {
 
     @ChangeSet(order = "000", id = "setDefaultUsersIfEmpty", author = "khlystov", runAlways = true)
     fun setDefaultUsersIfEmpty(template: MongoTemplate) {
-        fun getRndUser(name: String, roles: Set<Roles> = setOf(Roles.User)): User {
+        fun getRndUser(name: String, roles: Set<Roles> = setOf(Roles.USER)): User {
             val password = "111111" //UUID.randomUUID().toString()
             val user = User(null,
                     name,
@@ -34,7 +31,7 @@ class SetDefaultUsersIfEmptyMongoDBChangeLog {
 
         val query = BasicQuery("{}")
         if (!template.exists(query, User::class.java)) {
-            template.insert(getRndUser("Admin", setOf(Roles.Admin, Roles.User)))
+            template.insert(getRndUser("Admin", setOf(Roles.ADMIN, Roles.USER)))
             template.insert(getRndUser("User"))
         }
     }

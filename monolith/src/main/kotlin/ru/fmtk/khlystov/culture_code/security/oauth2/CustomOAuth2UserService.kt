@@ -58,7 +58,7 @@ class CustomOAuth2UserService(private val userRepository: UserRepository) : Defa
                 provider = AuthProvider.valueOf(oAuth2UserRequest.clientRegistration.registrationId.toUpperCase()),
                 providerId = oAuth2UserInfo.getId(),
                 imageUrl = oAuth2UserInfo.getImageUrl(),
-                roles = setOf(Roles.User.role))
+                roles = setOf(Roles.USER.role))
         return userRepository.save(user)
     }
 
