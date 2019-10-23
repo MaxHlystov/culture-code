@@ -1,8 +1,10 @@
 # Culture code
 Prototype of universal recomendation system
 
-You can see REST by [HAL browser](http://localhost:8080/browser/index.html#/).
-Recommendations rest-controller accessed by [/recommendations](http://localhost:8080/recommendations/) path.
+[Presentation for the application (RUS)](https://docs.google.com/presentation/d/1cUl59krgvpcsEq2Wc1EIrS_UZ4sq9SHjbBTvhwYKAOs/edit#slide=id.g63172097ef_1_0)  
+
+You can see REST by [HAL browser](http://localhost:8080/browser/index.html#/).  
+Recommendations rest-controller accessed by [/recommendations](http://localhost:8080/recommendations/) path.  
 
 You must to set environment parameters:
 - GITHUB_CLIENT_SECRET - client secret for github auth;
