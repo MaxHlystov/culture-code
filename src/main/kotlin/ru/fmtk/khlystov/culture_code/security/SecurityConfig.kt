@@ -93,7 +93,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                     .antMatchers("/auth/**", "/oauth2/**")
                         .permitAll()
                     .anyRequest()
-                    .authenticated()
+                        .authenticated()
                 .and()
 
                 .oauth2Login()
