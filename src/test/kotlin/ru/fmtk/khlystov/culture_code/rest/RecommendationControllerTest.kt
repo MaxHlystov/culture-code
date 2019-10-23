@@ -20,7 +20,7 @@ import ru.fmtk.khlystov.culture_code.sevice.dto.RecommendationsDTO
 
 @AutoConfigureMockMvc(secure = false)
 @WebMvcTest(RecommendationController::class)
-@DisplayName("RecommendationController must")
+@DisplayName("RecommendationController must ")
 internal class RecommendationControllerTest {
 
     companion object {
@@ -36,7 +36,7 @@ internal class RecommendationControllerTest {
     @MockBean
     lateinit var recommendationService: RecommendationService
 
-    @DisplayName(" get recommendations for valid user id and item type")
+    @DisplayName("get recommendations for valid user id and item type")
     @WithMockUser(username = "Admin", password = "111111", roles = ["ADMIN"])
     @Test
     fun getRecommendationsForUserAndItemType() {
