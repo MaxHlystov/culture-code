@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Configuration
@@ -17,7 +18,7 @@ import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.sevice.RecommendationService
 import ru.fmtk.khlystov.culture_code.sevice.dto.RecommendationsDTO
 
-//@AutoConfigureMockMvc(secure = false)
+@AutoConfigureMockMvc(secure = false)
 @WebMvcTest(RecommendationController::class)
 @DisplayName("RecommendationController must")
 internal class RecommendationControllerTest {
