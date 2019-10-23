@@ -82,20 +82,13 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
                 .authorizeRequests()
                     .antMatchers("recommendations/compute/**")
-                    .hasAuthority(Roles.Admin.role)
+                    .hasAuthority(Roles.ADMIN.role)
                 .and()
 
                 .authorizeRequests()
                     .antMatchers("/",
                             "/error",
-                            "/favicon.ico",
-                            "/**/*.png",
-                            "/**/*.gif",
-                            "/**/*.svg",
-                            "/**/*.jpg",
-                            "/**/*.html",
-                            "/**/*.css",
-                            "/**/*.js")
+                            "/static/**")
                         .permitAll()
                     .antMatchers("/auth/**", "/oauth2/**")
                         .permitAll()
