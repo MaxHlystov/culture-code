@@ -88,7 +88,8 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .authorizeRequests()
                     .antMatchers("/",
                             "/error",
-                            "/static/**")
+                            "/static/**",
+                            "/browser/**")
                         .permitAll()
                     .antMatchers("/auth/**", "/oauth2/**")
                         .permitAll()
