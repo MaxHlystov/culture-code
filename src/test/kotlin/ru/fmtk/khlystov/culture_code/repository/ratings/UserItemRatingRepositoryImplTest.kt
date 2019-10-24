@@ -22,7 +22,7 @@ import ru.fmtk.khlystov.culture_code.repository.AbstractRepositoryTest
 //@SpringBootTest
 @ComponentScan(basePackages = ["ru.fmtk.khlystov.culture_code.config"])
 @DisplayName("UserItemRatingRepository must")
-internal class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
+class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
 
     @Autowired
     lateinit var userItemRatingRepository: UserItemRatingRepository

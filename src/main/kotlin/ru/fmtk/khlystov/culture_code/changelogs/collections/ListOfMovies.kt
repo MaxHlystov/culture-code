@@ -194,9 +194,7 @@ class ListOfMovies {
 
         private fun getCountryByName(alpha3: String): Country {
             val country = countries[alpha3]
-            if (country == null || country.isEmpty()) {
-                throw IllegalArgumentException("Country with alpha3 code ${alpha3} not found.")
-            }
+            require(!(country == null || country.isEmpty())) { "Country with alpha3 code $alpha3 not found." }
             return country[0]
         }
     }

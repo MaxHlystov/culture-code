@@ -83,5 +83,5 @@ internal class RecommendationControllerTest {
     }
 
     @Configuration
-    class TestConfig {}
+    class TestConfig
 }

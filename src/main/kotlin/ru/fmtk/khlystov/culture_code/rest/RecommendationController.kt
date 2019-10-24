@@ -1,9 +1,6 @@
 package ru.fmtk.khlystov.culture_code.rest
 
 import org.springframework.hateoas.ExposesResourceFor
-import org.springframework.hateoas.Resource
-import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
-import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
 import org.springframework.web.bind.annotation.*
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.sevice.RecommendationService
