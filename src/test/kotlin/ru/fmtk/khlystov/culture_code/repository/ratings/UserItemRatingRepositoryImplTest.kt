@@ -9,19 +9,16 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
 import org.springframework.data.mongodb.core.MongoTemplate
 import ru.fmtk.khlystov.culture_code.changelogs.InitTestMongoDBData
+import ru.fmtk.khlystov.culture_code.config.ApplicationConfig
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemAvgRating
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.ratings.UserItemRating
 import ru.fmtk.khlystov.culture_code.repository.AbstractRepositoryTest
 
-@Import(value = [UserItemRatingRepositoryImpl::class, InitTestMongoDBData::class])
-@SpringBootTest
-@ComponentScan(basePackages = ["ru.fmtk.khlystov.culture_code.config"])
+//@Import(value = [UserItemRatingRepositoryImpl::class, InitTestMongoDBData::class])
+@SpringBootTest(classes = [ApplicationConfig::class])
 @DisplayName("UserItemRatingRepository must")
 class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
 
@@ -104,7 +101,4 @@ class UserItemRatingRepositoryTest : AbstractRepositoryTest() {
         val userCloseness = userItemRatingRepository.getClosenessByRating(userId, allRatings.size.toLong())
         assertEquals(15, userCloseness.size)
     }
-
-    @Configuration
-    class TestConfig
 }
