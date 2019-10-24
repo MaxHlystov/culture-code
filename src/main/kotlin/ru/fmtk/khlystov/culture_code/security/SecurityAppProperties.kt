@@ -1,7 +1,6 @@
 package ru.fmtk.khlystov.culture_code.security
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.stereotype.Component
 import java.util.*
 
 @ConfigurationProperties("app")

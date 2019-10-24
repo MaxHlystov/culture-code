@@ -5,6 +5,4 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import ru.fmtk.khlystov.culture_code.model.books.Book
 
 @RepositoryRestResource(path = "books")
-interface BookRepository : MongoRepository<Book, String> {
-
-}
+interface BookRepository : MongoRepository<Book, String>

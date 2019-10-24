@@ -45,7 +45,7 @@ class AuthController {
                 UsernamePasswordAuthenticationToken(loginRequest.name, loginRequest.password))
         SecurityContextHolder.getContext().authentication = authentication
         val token = tokenProvider.createToken(authentication)
-        return ResponseEntity.ok<AuthResponse>(AuthResponse(token))
+        return ResponseEntity.ok(AuthResponse(token))
     }
 
     @PostMapping("/signup")

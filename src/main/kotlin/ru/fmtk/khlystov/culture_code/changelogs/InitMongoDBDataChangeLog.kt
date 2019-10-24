@@ -113,9 +113,7 @@ private fun <ID, T> Map<ID, List<T>>.getFirstOrDefault(id: ID, default: T): T {
 
 private fun <ID, T> Map<ID, List<T>>.getFirstOrException(id: ID): T {
     val items: List<T>? = this[id]
-    if (items == null || items.isEmpty()) {
-        throw IllegalArgumentException("Didn't find item with id $id in list of type ${this::class.simpleName}.")
-    }
+    require(!(items == null || items.isEmpty())) { "Didn't find item with id $id in list of type ${this::class.simpleName}." }
     return items[0]
 }
 
