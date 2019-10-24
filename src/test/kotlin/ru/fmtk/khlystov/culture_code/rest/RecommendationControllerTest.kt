@@ -31,8 +31,6 @@ internal class RecommendationControllerTest {
 
     companion object {
         const val trustedUserId = "123456789"
-        const val trustedUserIdWithoutRecommendations = "777777777777"
-        const val notTrustedUserId = "0000000000"
         const val trustedItemId = "itemId_0001"
         val jsonMapper = jacksonObjectMapper()
     }

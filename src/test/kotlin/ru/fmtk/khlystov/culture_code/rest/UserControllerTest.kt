@@ -29,7 +29,7 @@ import ru.fmtk.khlystov.culture_code.security.oauth2.OAuth2AuthenticationFailure
 import ru.fmtk.khlystov.culture_code.security.oauth2.OAuth2AuthenticationSuccessHandler
 import java.util.*
 
-@AutoConfigureMockMvc(secure = false)
+//@AutoConfigureMockMvc(secure = false)
 @WebMvcTest(UserController::class)
 @DisplayName("UserController must ")
 internal class UserControllerTest {
