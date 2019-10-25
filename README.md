@@ -4,7 +4,7 @@
 [Presentation for the application (RUS)](https://docs.google.com/presentation/d/1cUl59krgvpcsEq2Wc1EIrS_UZ4sq9SHjbBTvhwYKAOs/edit#slide=id.g63172097ef_1_0)  
 
 You can explore the application's REST by [HAL browser](https://culture-code-backend.herokuapp.com/browser/index.html#/).  
-See how it works with frontend [here](https://culture-code-frontend.herokuapp.com/).    
+  
 
 If you want to start your own server, it needs to set the environment parameters:
 - GITHUB_CLIENT_SECRET - client secret for github auth;
