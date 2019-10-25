@@ -11,7 +11,6 @@ class RestResourcesAdditionalLinksConfig: ResourceProcessor<RepositoryLinksResou
     override fun process(resource: RepositoryLinksResource): RepositoryLinksResource {
         resource.add(
                 linkTo(RecommendationController::class.java)
-                        //.slash("auth/login")
                         .withRel("recommendations"))
         return resource
     }

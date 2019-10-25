@@ -76,10 +76,4 @@ internal class RecommendationServiceImplTest {
                 .map(Recommendation::itemId).toList()
         assertIterableEquals(checkedItemsId, recommendationsDTO.itemsId)
     }
-
-    @Test
-    @DisplayName(" compute recommendations for all users.")
-    fun computeRecommendations() {
-
-    }
 }
