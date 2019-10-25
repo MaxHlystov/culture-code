@@ -1,23 +1,29 @@
 package ru.fmtk.khlystov.culture_code.sevice.implementation
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertIterableEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
-import org.springframework.beans.factory.annotation.Autowired
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.context.annotation.Import
 import ru.fmtk.khlystov.culture_code.model.ratings.ItemType
 import ru.fmtk.khlystov.culture_code.model.recomendations.Recommendation
 import ru.fmtk.khlystov.culture_code.repository.recommendations.RecommendationsRepository
+import ru.fmtk.khlystov.culture_code.sevice.RatingService
+import ru.fmtk.khlystov.culture_code.sevice.UsersService
 import ru.fmtk.khlystov.culture_code.sevice.dto.RecommendationsDTO
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
 
 
 @Import(value = [RecommendationServiceImpl::class])
+@ExtendWith(MockitoExtension::class)
 @DisplayName("RecommendationService must ")
 internal class RecommendationServiceImplTest {
 
@@ -26,24 +32,25 @@ internal class RecommendationServiceImplTest {
         const val trustedItemId = "itemId_0001"
     }
 
-    @Autowired
+    @InjectMocks
     lateinit var recommendationService: RecommendationServiceImpl
 
+    @Mock
     lateinit var recommendationsRepository: RecommendationsRepository
 
-//    @MockBean
-//    lateinit var ratingService: RatingService
-//
-//    @MockBean
-//    lateinit var usersService: UsersService
+    @Mock
+    lateinit var ratingService: RatingService
+
+    @Mock
+    lateinit var usersService: UsersService
 
     @Test
     @DisplayName(" get recommendations for user id.")
     fun getRecommendations() {
-        recommendationsRepository = mock(RecommendationsRepository::class.java)
-        val ids = generateSequence(10) { i -> i + 1 }.take(4).map(Int::toString).toList()
+        val ids = generateSequence(10) { i -> i + 1 }.take(4)
+                .map { id -> "Item #$id" }.toList()
         val recommendations = ids.map { id ->
-            Recommendation(id, trustedUserId, ItemType.BOOK, "Item #$id")
+            Recommendation(id, trustedUserId, ItemType.BOOK, id)
         }.toList()
         val recommendationsDTO = RecommendationsDTO(trustedUserId, ItemType.BOOK, ids.toSet())
         given(recommendationsRepository.findAllByUserIdAndItemTypeAndCheckedFalse(eq(trustedUserId), eq(ItemType.BOOK), any()))
@@ -53,21 +60,26 @@ internal class RecommendationServiceImplTest {
     }
 
     @Test
-    @DisplayName(" compute recommendations for all users.")
-    fun computeRecommendations() {
+    @DisplayName(" check recommendations for user id")
+    fun checkRecommendations() {
+        val ids = generateSequence(10) { i -> i + 1 }.take(4)
+                .map { id -> "Item #$id" }.toList()
+        val recommendations = ids.map { id ->
+            Recommendation(id, trustedUserId, ItemType.BOOK, id)
+        }.toList()
+        val recommendationsDTO = RecommendationsDTO(trustedUserId, ItemType.BOOK, ids.toSet())
+        recommendationService.checkRecommendations(recommendationsDTO)
+        val checkedRecommendations = argumentCaptor<Collection<Recommendation>>()
+        Mockito.verify(recommendationsRepository).setRecommendationsAsChecked(checkedRecommendations.capture())
+        val capturedRecommendation = checkedRecommendations.firstValue
+        val checkedItemsId = capturedRecommendation.filter(Recommendation::checked)
+                .map(Recommendation::itemId).toList()
+        assertIterableEquals(checkedItemsId, recommendationsDTO.itemsId)
     }
 
     @Test
-    @DisplayName(" get recommendations for user id")
-    fun getUsersCloseness() {
-    }
+    @DisplayName(" compute recommendations for all users.")
+    fun computeRecommendations() {
 
-//    @TestConfiguration
-//    internal class RecommendationServiceImplTestContextConfiguration {
-//
-//        @Bean
-//        fun employeeService(): RecommendationServiceImpl {
-//            return RecommendationServiceImpl()
-//        }
-//    }
+    }
 }
